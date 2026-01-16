@@ -1,0 +1,44 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/src/main",
+	"scripts": {
+		"build": "nest build",
+		"start:dev": "nest start --watch",
+		"start:prod": "node ."
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "commonjs",
+	"dependencies": {
+		"@nestjs/bullmq": "^11.0.4",
+		"@nestjs/common": "^11.1.11",
+		"@nestjs/config": "^4.0.2",
+		"@nestjs/core": "^11.1.11",
+		"@nestjs/platform-express": "^11.1.11",
+		"@nestjs/platform-socket.io": "^11.1.12",
+		"@nestjs/websockets": "^11.1.12",
+		"@prisma/adapter-pg": "^7.2.0",
+		"@prisma/client": "^7.2.0",
+		"bullmq": "^5.66.5",
+		"dotenv": "^17.2.3",
+		"nodemailer": "^7.0.12",
+		"pg": "^8.16.3",
+		"reflect-metadata": "^0.2.2",
+		"socket.io": "^4.8.3",
+		"zod": "^4.3.5"
+	},
+	"devDependencies": {
+		"@nestjs/cli": "^11.0.14",
+		"@nestjs/schematics": "^11.0.9",
+		"@types/node": "^25.0.3",
+		"@types/nodemailer": "^7.0.5",
+		"@types/pg": "^8.16.0",
+		"prisma": "^7.2.0",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3"
+	}
+}
+

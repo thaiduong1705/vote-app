@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: vote-app-postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: vote_app
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+  postgres-admin:
+    image: dpage/pgadmin4:latest
+    container_name: vote-app-postgres-admin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+  valkey:
+    image: valkey/valkey-bundle:latest
+    container_name: valkey
+    restart: always
+    command: valkey-server --requirepass 123 --bind 0.0.0.0 --save 60 1 --loglevel warning
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey-data:/data
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    restart: always
+    ports:
+      - 5540:5540
+    depends_on:
+      - valkey
+    volumes:
+      - redisinsight:/data
+
+volumes:
+  postgres-data:
+  valkey-data:
+  redisinsight:
+networks:
+  default:
+    driver: bridge
