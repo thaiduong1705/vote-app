@@ -7,11 +7,12 @@ export const envSchema = z.object({
 	DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
 	REDIS_HOST: z.string().default("localhost"),
 	REDIS_PORT: z.coerce.number().int().positive().default(6379),
+	REDIS_PASSWORD: z.string().optional(),
 	SMTP_HOST: z.string().min(1, "SMTP_HOST is required"),
 	SMTP_PORT: z.coerce.number().int().positive().default(587),
-	SMTP_USER: z.string().min(1, "SMTP_USER is required"),
+	SMTP_USER: z.string().email().min(1, "SMTP_USER is required"),
 	SMTP_PASS: z.string().min(1, "SMTP_PASS is required"),
-	SMTP_FROM: z.string().email("SMTP_FROM must be a valid email"),
+	SMTP_FROM: z.string().min(1, "SMTP_FROM is required"),
 	FRONTEND_URL: z.string().url().default("http://localhost:5173"),
 });
 
@@ -31,3 +32,4 @@ export function validate(config: Record<string, unknown>) {
 
 	return result.data;
 }
+

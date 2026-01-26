@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from "./common/pipes/validation.pipe";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
 
@@ -8,14 +8,7 @@ async function bootstrap() {
 	const configService = app.get(ConfigService);
 
 	// Global validation pipe for request DTOs
-	app.useGlobalPipes(
-		new ValidationPipe({
-			whitelist: true,
-			transform: true,
-			forbidNonWhitelisted: true,
-		})
-	);
-
+	app.useGlobalPipes(new ValidationPipe());
 	// CORS configuration
 	app.enableCors({
 		origin: configService.get<string>("FRONTEND_URL"),

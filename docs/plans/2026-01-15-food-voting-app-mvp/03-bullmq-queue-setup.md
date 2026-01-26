@@ -1,14 +1,15 @@
 # Task 3: BullMQ Queue Setup
 
+> **Note:** Setup theo NestJS Official Documentation: https://docs.nestjs.com/techniques/queues
+
 **Files:**
 
-- Create: `server/src/queue/queue.module.ts`
-- Create: `server/src/queue/queue.service.ts`
-- Create: `server/src/queue/queues.constant.ts`
+- Create: `server/src/queue/queue.constant.ts`
+- Modify: `server/src/app.module.ts`
 
 **Step 1: Define queue constants**
 
-Create `server/src/queue/queues.constant.ts`:
+Create `server/src/queue/queue.constant.ts`:
 
 ```typescript
 export const QUEUE_NAMES = {
@@ -23,74 +24,74 @@ export const JOB_NAMES = {
 } as const;
 ```
 
-**Step 2: Create queue service**
-
-Create `server/src/queue/queue.service.ts`:
-
-```typescript
-import { Injectable, OnModuleInit } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Queue } from "bullmq";
-import { QUEUE_NAMES } from "./queues.constant";
-
-@Injectable()
-export class QueueService implements OnModuleInit {
-	public emailQueue: Queue;
-	public roomCloserQueue: Queue;
-
-	constructor(private configService: ConfigService) {}
-
-	onModuleInit() {
-		const connection = {
-			host: this.configService.get("redis.host"),
-			port: this.configService.get("redis.port"),
-		};
-
-		this.emailQueue = new Queue(QUEUE_NAMES.EMAIL, { connection });
-		this.roomCloserQueue = new Queue(QUEUE_NAMES.ROOM_CLOSER, { connection });
-	}
-}
-```
-
-**Step 3: Create queue module**
-
-Create `server/src/queue/queue.module.ts`:
-
-```typescript
-import { Module, Global } from "@nestjs/common";
-import { QueueService } from "./queue.service";
-
-@Global()
-@Module({
-	providers: [QueueService],
-	exports: [QueueService],
-})
-export class QueueModule {}
-```
-
-**Step 4: Import queue module in app**
+**Step 2: Setup BullModule in app.module.ts**
 
 Modify `server/src/app.module.ts`:
 
 ```typescript
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { BullModule } from "@nestjs/bullmq";
 import { envConfig } from "./config/env.config";
+import { validate } from "./config/env.validation";
 import { PrismaService } from "./config/database.config";
-import { QueueModule } from "./queue/queue.module";
+import { QUEUE_NAMES } from "./queue/queue.constant";
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			load: [envConfig],
+			validate,
+			cache: true,
 		}),
-		QueueModule,
+		// Setup BullMQ connection
+		BullModule.forRootAsync({
+			imports: [ConfigModule],
+			useFactory: (configService: ConfigService) => ({
+				connection: {
+					host: configService.get<string>("redis.host"),
+					port: configService.get<number>("redis.port"),
+				},
+			}),
+			inject: [ConfigService],
+		}),
+		// Register queues
+		BullModule.registerQueue(
+			{
+				name: QUEUE_NAMES.EMAIL,
+			},
+			{
+				name: QUEUE_NAMES.ROOM_CLOSER,
+			}
+		),
 	],
 	providers: [PrismaService],
 	exports: [PrismaService],
 })
 export class AppModule {}
+```
+
+**Step 3: Using queues in services**
+
+To use a queue in a service, inject it using `@InjectQueue()`:
+
+```typescript
+import { Injectable } from "@nestjs/common";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
+import { QUEUE_NAMES, JOB_NAMES } from "./queue/queue.constant";
+
+@Injectable()
+export class SomeService {
+	constructor(
+		@InjectQueue(QUEUE_NAMES.EMAIL) private emailQueue: Queue
+	) {}
+
+	async addEmailJob(data: any) {
+		await this.emailQueue.add(JOB_NAMES.SEND_INVITE, data);
+	}
+}
 ```
 
 **Step 5: Test queue initialization**

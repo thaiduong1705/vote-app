@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "./generated"
+  moduleFormat  = "cjs"
 }
 
 datasource db {
@@ -86,7 +87,7 @@ model Votes {
 
   room               Rooms        @relation(fields: [room_id], references: [id], onDelete: Cascade)
   participant        Participants @relation(fields: [participant_id], references: [id], onDelete: Cascade)
-  restaurant         Restaurants  @relation(fields: [restaurant_id], references: [id])
+  restaurant         Restaurants  @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
 
   @@unique([room_id, participant_id])
   @@index([room_id])
