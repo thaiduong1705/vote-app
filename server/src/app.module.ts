@@ -4,8 +4,8 @@ import { BullModule } from "@nestjs/bullmq";
 import { envConfig } from "./config/env.config";
 import { validate } from "./config/env.validation";
 import { PrismaService } from "./config/database.config";
-import { QUEUE_NAMES } from "./queue/queue.constant";
 import { WorkerModule } from "./workers/worker.module";
+import { RoomsModule } from "./modules/rooms/rooms.module";
 
 @Module({
 	imports: [
@@ -27,6 +27,7 @@ import { WorkerModule } from "./workers/worker.module";
 			inject: [ConfigService],
 		}),
 		WorkerModule,
+		RoomsModule,
 	],
 	providers: [PrismaService],
 	exports: [PrismaService],

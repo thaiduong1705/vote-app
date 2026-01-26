@@ -1,5 +1,6 @@
 import { Processor, WorkerHost } from "@nestjs/bullmq";
-import nodemailer, { Transporter } from "nodemailer";
+import * as nodemailer from "nodemailer";
+import { Transporter } from "nodemailer";
 import { Job } from "bullmq";
 import { JOB_NAMES, QUEUE_NAMES } from "src/queue/queue.constant";
 import { emailTemplates } from "src/templates/email.templates";
