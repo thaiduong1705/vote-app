@@ -6,6 +6,7 @@ import { validate } from "./config/env.validation";
 import { PrismaService } from "./config/database.config";
 import { WorkerModule } from "./workers/worker.module";
 import { RoomsModule } from "./modules/rooms/rooms.module";
+import { InvitationsModule } from "./modules/invitations/invitations.module";
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { RoomsModule } from "./modules/rooms/rooms.module";
 		}),
 		WorkerModule,
 		RoomsModule,
+		InvitationsModule,
 	],
 	providers: [PrismaService],
 	exports: [PrismaService],

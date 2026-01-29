@@ -28,7 +28,6 @@ export type InvitationsMinAggregateOutputType = {
   id: string | null
   room_id: string | null
   email: string | null
-  token: string | null
   expires_at: Date | null
   used_at: Date | null
   created_at: Date | null
@@ -38,7 +37,6 @@ export type InvitationsMaxAggregateOutputType = {
   id: string | null
   room_id: string | null
   email: string | null
-  token: string | null
   expires_at: Date | null
   used_at: Date | null
   created_at: Date | null
@@ -48,7 +46,6 @@ export type InvitationsCountAggregateOutputType = {
   id: number
   room_id: number
   email: number
-  token: number
   expires_at: number
   used_at: number
   created_at: number
@@ -60,7 +57,6 @@ export type InvitationsMinAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  token?: true
   expires_at?: true
   used_at?: true
   created_at?: true
@@ -70,7 +66,6 @@ export type InvitationsMaxAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  token?: true
   expires_at?: true
   used_at?: true
   created_at?: true
@@ -80,7 +75,6 @@ export type InvitationsCountAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  token?: true
   expires_at?: true
   used_at?: true
   created_at?: true
@@ -163,7 +157,6 @@ export type InvitationsGroupByOutputType = {
   id: string
   room_id: string
   email: string
-  token: string
   expires_at: Date
   used_at: Date | null
   created_at: Date
@@ -194,7 +187,6 @@ export type InvitationsWhereInput = {
   id?: Prisma.StringFilter<"Invitations"> | string
   room_id?: Prisma.StringFilter<"Invitations"> | string
   email?: Prisma.StringFilter<"Invitations"> | string
-  token?: Prisma.StringFilter<"Invitations"> | string
   expires_at?: Prisma.DateTimeFilter<"Invitations"> | Date | string
   used_at?: Prisma.DateTimeNullableFilter<"Invitations"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Invitations"> | Date | string
@@ -205,7 +197,6 @@ export type InvitationsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  token?: Prisma.SortOrder
   expires_at?: Prisma.SortOrder
   used_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -214,7 +205,6 @@ export type InvitationsOrderByWithRelationInput = {
 
 export type InvitationsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  token?: string
   room_id_email?: Prisma.InvitationsRoom_idEmailCompoundUniqueInput
   AND?: Prisma.InvitationsWhereInput | Prisma.InvitationsWhereInput[]
   OR?: Prisma.InvitationsWhereInput[]
@@ -225,13 +215,12 @@ export type InvitationsWhereUniqueInput = Prisma.AtLeast<{
   used_at?: Prisma.DateTimeNullableFilter<"Invitations"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Invitations"> | Date | string
   room?: Prisma.XOR<Prisma.RoomsScalarRelationFilter, Prisma.RoomsWhereInput>
-}, "id" | "token" | "room_id_email">
+}, "id" | "room_id_email">
 
 export type InvitationsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  token?: Prisma.SortOrder
   expires_at?: Prisma.SortOrder
   used_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -247,7 +236,6 @@ export type InvitationsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Invitations"> | string
   room_id?: Prisma.StringWithAggregatesFilter<"Invitations"> | string
   email?: Prisma.StringWithAggregatesFilter<"Invitations"> | string
-  token?: Prisma.StringWithAggregatesFilter<"Invitations"> | string
   expires_at?: Prisma.DateTimeWithAggregatesFilter<"Invitations"> | Date | string
   used_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Invitations"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Invitations"> | Date | string
@@ -256,7 +244,6 @@ export type InvitationsScalarWhereWithAggregatesInput = {
 export type InvitationsCreateInput = {
   id?: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -267,7 +254,6 @@ export type InvitationsUncheckedCreateInput = {
   id?: string
   room_id: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -276,7 +262,6 @@ export type InvitationsUncheckedCreateInput = {
 export type InvitationsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -287,7 +272,6 @@ export type InvitationsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   room_id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -297,7 +281,6 @@ export type InvitationsCreateManyInput = {
   id?: string
   room_id: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -306,7 +289,6 @@ export type InvitationsCreateManyInput = {
 export type InvitationsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -316,7 +298,6 @@ export type InvitationsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   room_id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -341,7 +322,6 @@ export type InvitationsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  token?: Prisma.SortOrder
   expires_at?: Prisma.SortOrder
   used_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -351,7 +331,6 @@ export type InvitationsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  token?: Prisma.SortOrder
   expires_at?: Prisma.SortOrder
   used_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -361,7 +340,6 @@ export type InvitationsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  token?: Prisma.SortOrder
   expires_at?: Prisma.SortOrder
   used_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -416,7 +394,6 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 export type InvitationsCreateWithoutRoomInput = {
   id?: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -425,7 +402,6 @@ export type InvitationsCreateWithoutRoomInput = {
 export type InvitationsUncheckedCreateWithoutRoomInput = {
   id?: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -464,7 +440,6 @@ export type InvitationsScalarWhereInput = {
   id?: Prisma.StringFilter<"Invitations"> | string
   room_id?: Prisma.StringFilter<"Invitations"> | string
   email?: Prisma.StringFilter<"Invitations"> | string
-  token?: Prisma.StringFilter<"Invitations"> | string
   expires_at?: Prisma.DateTimeFilter<"Invitations"> | Date | string
   used_at?: Prisma.DateTimeNullableFilter<"Invitations"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"Invitations"> | Date | string
@@ -473,7 +448,6 @@ export type InvitationsScalarWhereInput = {
 export type InvitationsCreateManyRoomInput = {
   id?: string
   email: string
-  token: string
   expires_at: Date | string
   used_at?: Date | string | null
   created_at?: Date | string
@@ -482,7 +456,6 @@ export type InvitationsCreateManyRoomInput = {
 export type InvitationsUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -491,7 +464,6 @@ export type InvitationsUpdateWithoutRoomInput = {
 export type InvitationsUncheckedUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -500,7 +472,6 @@ export type InvitationsUncheckedUpdateWithoutRoomInput = {
 export type InvitationsUncheckedUpdateManyWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
   expires_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   used_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -512,7 +483,6 @@ export type InvitationsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   room_id?: boolean
   email?: boolean
-  token?: boolean
   expires_at?: boolean
   used_at?: boolean
   created_at?: boolean
@@ -523,7 +493,6 @@ export type InvitationsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   room_id?: boolean
   email?: boolean
-  token?: boolean
   expires_at?: boolean
   used_at?: boolean
   created_at?: boolean
@@ -534,7 +503,6 @@ export type InvitationsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   room_id?: boolean
   email?: boolean
-  token?: boolean
   expires_at?: boolean
   used_at?: boolean
   created_at?: boolean
@@ -545,13 +513,12 @@ export type InvitationsSelectScalar = {
   id?: boolean
   room_id?: boolean
   email?: boolean
-  token?: boolean
   expires_at?: boolean
   used_at?: boolean
   created_at?: boolean
 }
 
-export type InvitationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_id" | "email" | "token" | "expires_at" | "used_at" | "created_at", ExtArgs["result"]["invitations"]>
+export type InvitationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_id" | "email" | "expires_at" | "used_at" | "created_at", ExtArgs["result"]["invitations"]>
 export type InvitationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   room?: boolean | Prisma.RoomsDefaultArgs<ExtArgs>
 }
@@ -571,7 +538,6 @@ export type $InvitationsPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     room_id: string
     email: string
-    token: string
     expires_at: Date
     used_at: Date | null
     created_at: Date
@@ -1002,7 +968,6 @@ export interface InvitationsFieldRefs {
   readonly id: Prisma.FieldRef<"Invitations", 'String'>
   readonly room_id: Prisma.FieldRef<"Invitations", 'String'>
   readonly email: Prisma.FieldRef<"Invitations", 'String'>
-  readonly token: Prisma.FieldRef<"Invitations", 'String'>
   readonly expires_at: Prisma.FieldRef<"Invitations", 'DateTime'>
   readonly used_at: Prisma.FieldRef<"Invitations", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"Invitations", 'DateTime'>

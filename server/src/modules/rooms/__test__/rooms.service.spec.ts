@@ -3,7 +3,7 @@ import { RoomsService } from "../rooms.service";
 import { PrismaService } from "src/config/database.config";
 import { ConfigService } from "@nestjs/config";
 import { getQueueToken } from "@nestjs/bullmq";
-import { QUEUE_NAMES } from "src/queue/queue.constant";
+import { QUEUE_NAMES } from "src/utils/constant";
 
 describe("RoomsService", () => {
 	let service: RoomsService;

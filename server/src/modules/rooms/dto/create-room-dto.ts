@@ -1,8 +1,9 @@
-import { IsDate, IsEmail, IsString, Min, min } from "class-validator";
+import { IsDate, IsEmail, IsString, MinLength } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateRoomDto {
 	@IsString()
-	@Min(3)
+	@MinLength(3)
 	roomName: string;
 
 	@IsString()
@@ -11,9 +12,11 @@ export class CreateRoomDto {
 	@IsEmail()
 	ownerEmail: string;
 
+	@Type(() => Date)
 	@IsDate()
 	startAt: Date;
 
+	@Type(() => Date)
 	@IsDate()
 	endAt: Date;
 }

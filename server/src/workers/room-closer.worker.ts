@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Job } from "bullmq";
 import { ROOM_STATUS } from "prisma/generated/enums";
 import { PrismaService } from "src/config/database.config";
-import { JOB_NAMES, QUEUE_NAMES } from "src/queue/queue.constant";
+import { JOB_NAMES, QUEUE_NAMES } from "src/utils/constant";
 
 @Processor(QUEUE_NAMES.ROOM_CLOSER)
 export class RoomCloserWorker extends WorkerHost {

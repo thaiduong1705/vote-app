@@ -12,9 +12,11 @@ export class ValidationPipe implements PipeTransform<any> {
 		const object = plainToInstance(metatype, value);
 		const errors = await validate(object);
 		if (errors.length > 0) {
+			console.log("Validation failed for object:", object);
+			console.log("Validation errors:", errors);
 			throw new BadGatewayException("Validation failed");
 		}
-		return value;
+		return object;
 	}
 
 	private toValidate(metatype: Function): boolean {

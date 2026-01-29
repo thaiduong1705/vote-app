@@ -2,7 +2,7 @@ import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
 import { Queue } from "bullmq";
 import { PrismaService } from "src/config/database.config";
-import { QUEUE_NAMES } from "src/queue/queue.constant";
+import { QUEUE_NAMES } from "src/utils/constant";
 import { CreateRoomDto } from "./dto/create-room-dto";
 import { randomBytes } from "node:crypto";
 import { PARTICIPANT_ROLE } from "prisma/generated/enums";

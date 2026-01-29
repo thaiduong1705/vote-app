@@ -31,7 +31,6 @@ export type RoomsMinAggregateOutputType = {
   end_at: Date | null
   status: $Enums.ROOM_STATUS | null
   owner_id: string | null
-  owner_token: string | null
   winner_restaurant_id: string | null
   created_at: Date | null
 }
@@ -43,7 +42,6 @@ export type RoomsMaxAggregateOutputType = {
   end_at: Date | null
   status: $Enums.ROOM_STATUS | null
   owner_id: string | null
-  owner_token: string | null
   winner_restaurant_id: string | null
   created_at: Date | null
 }
@@ -55,7 +53,6 @@ export type RoomsCountAggregateOutputType = {
   end_at: number
   status: number
   owner_id: number
-  owner_token: number
   winner_restaurant_id: number
   created_at: number
   _all: number
@@ -69,7 +66,6 @@ export type RoomsMinAggregateInputType = {
   end_at?: true
   status?: true
   owner_id?: true
-  owner_token?: true
   winner_restaurant_id?: true
   created_at?: true
 }
@@ -81,7 +77,6 @@ export type RoomsMaxAggregateInputType = {
   end_at?: true
   status?: true
   owner_id?: true
-  owner_token?: true
   winner_restaurant_id?: true
   created_at?: true
 }
@@ -93,7 +88,6 @@ export type RoomsCountAggregateInputType = {
   end_at?: true
   status?: true
   owner_id?: true
-  owner_token?: true
   winner_restaurant_id?: true
   created_at?: true
   _all?: true
@@ -178,7 +172,6 @@ export type RoomsGroupByOutputType = {
   end_at: Date
   status: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id: string | null
   created_at: Date
   _count: RoomsCountAggregateOutputType | null
@@ -211,7 +204,6 @@ export type RoomsWhereInput = {
   end_at?: Prisma.DateTimeFilter<"Rooms"> | Date | string
   status?: Prisma.EnumROOM_STATUSFilter<"Rooms"> | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFilter<"Rooms"> | string
-  owner_token?: Prisma.StringFilter<"Rooms"> | string
   winner_restaurant_id?: Prisma.StringNullableFilter<"Rooms"> | string | null
   created_at?: Prisma.DateTimeFilter<"Rooms"> | Date | string
   participants?: Prisma.ParticipantsListRelationFilter
@@ -227,7 +219,6 @@ export type RoomsOrderByWithRelationInput = {
   end_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
-  owner_token?: Prisma.SortOrder
   winner_restaurant_id?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   participants?: Prisma.ParticipantsOrderByRelationAggregateInput
@@ -238,7 +229,6 @@ export type RoomsOrderByWithRelationInput = {
 
 export type RoomsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  owner_token?: string
   AND?: Prisma.RoomsWhereInput | Prisma.RoomsWhereInput[]
   OR?: Prisma.RoomsWhereInput[]
   NOT?: Prisma.RoomsWhereInput | Prisma.RoomsWhereInput[]
@@ -253,7 +243,7 @@ export type RoomsWhereUniqueInput = Prisma.AtLeast<{
   invitations?: Prisma.InvitationsListRelationFilter
   votes?: Prisma.VotesListRelationFilter
   winner?: Prisma.XOR<Prisma.RestaurantsNullableScalarRelationFilter, Prisma.RestaurantsWhereInput> | null
-}, "id" | "owner_token">
+}, "id">
 
 export type RoomsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -262,7 +252,6 @@ export type RoomsOrderByWithAggregationInput = {
   end_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
-  owner_token?: Prisma.SortOrder
   winner_restaurant_id?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   _count?: Prisma.RoomsCountOrderByAggregateInput
@@ -280,7 +269,6 @@ export type RoomsScalarWhereWithAggregatesInput = {
   end_at?: Prisma.DateTimeWithAggregatesFilter<"Rooms"> | Date | string
   status?: Prisma.EnumROOM_STATUSWithAggregatesFilter<"Rooms"> | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringWithAggregatesFilter<"Rooms"> | string
-  owner_token?: Prisma.StringWithAggregatesFilter<"Rooms"> | string
   winner_restaurant_id?: Prisma.StringNullableWithAggregatesFilter<"Rooms"> | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Rooms"> | Date | string
 }
@@ -292,7 +280,6 @@ export type RoomsCreateInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   participants?: Prisma.ParticipantsCreateNestedManyWithoutRoomInput
   invitations?: Prisma.InvitationsCreateNestedManyWithoutRoomInput
@@ -307,7 +294,6 @@ export type RoomsUncheckedCreateInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id?: string | null
   created_at?: Date | string
   participants?: Prisma.ParticipantsUncheckedCreateNestedManyWithoutRoomInput
@@ -322,7 +308,6 @@ export type RoomsUpdateInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUpdateManyWithoutRoomNestedInput
   invitations?: Prisma.InvitationsUpdateManyWithoutRoomNestedInput
@@ -337,7 +322,6 @@ export type RoomsUncheckedUpdateInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   winner_restaurant_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUncheckedUpdateManyWithoutRoomNestedInput
@@ -352,7 +336,6 @@ export type RoomsCreateManyInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id?: string | null
   created_at?: Date | string
 }
@@ -364,7 +347,6 @@ export type RoomsUpdateManyMutationInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -375,7 +357,6 @@ export type RoomsUncheckedUpdateManyInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   winner_restaurant_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -387,7 +368,6 @@ export type RoomsCountOrderByAggregateInput = {
   end_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
-  owner_token?: Prisma.SortOrder
   winner_restaurant_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -399,7 +379,6 @@ export type RoomsMaxOrderByAggregateInput = {
   end_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
-  owner_token?: Prisma.SortOrder
   winner_restaurant_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -411,7 +390,6 @@ export type RoomsMinOrderByAggregateInput = {
   end_at?: Prisma.SortOrder
   status?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
-  owner_token?: Prisma.SortOrder
   winner_restaurant_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
 }
@@ -538,7 +516,6 @@ export type RoomsCreateWithoutParticipantsInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   invitations?: Prisma.InvitationsCreateNestedManyWithoutRoomInput
   votes?: Prisma.VotesCreateNestedManyWithoutRoomInput
@@ -552,7 +529,6 @@ export type RoomsUncheckedCreateWithoutParticipantsInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id?: string | null
   created_at?: Date | string
   invitations?: Prisma.InvitationsUncheckedCreateNestedManyWithoutRoomInput
@@ -582,7 +558,6 @@ export type RoomsUpdateWithoutParticipantsInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invitations?: Prisma.InvitationsUpdateManyWithoutRoomNestedInput
   votes?: Prisma.VotesUpdateManyWithoutRoomNestedInput
@@ -596,7 +571,6 @@ export type RoomsUncheckedUpdateWithoutParticipantsInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   winner_restaurant_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invitations?: Prisma.InvitationsUncheckedUpdateManyWithoutRoomNestedInput
@@ -610,7 +584,6 @@ export type RoomsCreateWithoutInvitationsInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   participants?: Prisma.ParticipantsCreateNestedManyWithoutRoomInput
   votes?: Prisma.VotesCreateNestedManyWithoutRoomInput
@@ -624,7 +597,6 @@ export type RoomsUncheckedCreateWithoutInvitationsInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id?: string | null
   created_at?: Date | string
   participants?: Prisma.ParticipantsUncheckedCreateNestedManyWithoutRoomInput
@@ -654,7 +626,6 @@ export type RoomsUpdateWithoutInvitationsInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUpdateManyWithoutRoomNestedInput
   votes?: Prisma.VotesUpdateManyWithoutRoomNestedInput
@@ -668,7 +639,6 @@ export type RoomsUncheckedUpdateWithoutInvitationsInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   winner_restaurant_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUncheckedUpdateManyWithoutRoomNestedInput
@@ -682,7 +652,6 @@ export type RoomsCreateWithoutWinnerInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   participants?: Prisma.ParticipantsCreateNestedManyWithoutRoomInput
   invitations?: Prisma.InvitationsCreateNestedManyWithoutRoomInput
@@ -696,7 +665,6 @@ export type RoomsUncheckedCreateWithoutWinnerInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   participants?: Prisma.ParticipantsUncheckedCreateNestedManyWithoutRoomInput
   invitations?: Prisma.InvitationsUncheckedCreateNestedManyWithoutRoomInput
@@ -739,7 +707,6 @@ export type RoomsScalarWhereInput = {
   end_at?: Prisma.DateTimeFilter<"Rooms"> | Date | string
   status?: Prisma.EnumROOM_STATUSFilter<"Rooms"> | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFilter<"Rooms"> | string
-  owner_token?: Prisma.StringFilter<"Rooms"> | string
   winner_restaurant_id?: Prisma.StringNullableFilter<"Rooms"> | string | null
   created_at?: Prisma.DateTimeFilter<"Rooms"> | Date | string
 }
@@ -751,7 +718,6 @@ export type RoomsCreateWithoutVotesInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
   participants?: Prisma.ParticipantsCreateNestedManyWithoutRoomInput
   invitations?: Prisma.InvitationsCreateNestedManyWithoutRoomInput
@@ -765,7 +731,6 @@ export type RoomsUncheckedCreateWithoutVotesInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   winner_restaurant_id?: string | null
   created_at?: Date | string
   participants?: Prisma.ParticipantsUncheckedCreateNestedManyWithoutRoomInput
@@ -795,7 +760,6 @@ export type RoomsUpdateWithoutVotesInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUpdateManyWithoutRoomNestedInput
   invitations?: Prisma.InvitationsUpdateManyWithoutRoomNestedInput
@@ -809,7 +773,6 @@ export type RoomsUncheckedUpdateWithoutVotesInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   winner_restaurant_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUncheckedUpdateManyWithoutRoomNestedInput
@@ -823,7 +786,6 @@ export type RoomsCreateManyWinnerInput = {
   end_at: Date | string
   status?: $Enums.ROOM_STATUS
   owner_id: string
-  owner_token: string
   created_at?: Date | string
 }
 
@@ -834,7 +796,6 @@ export type RoomsUpdateWithoutWinnerInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUpdateManyWithoutRoomNestedInput
   invitations?: Prisma.InvitationsUpdateManyWithoutRoomNestedInput
@@ -848,7 +809,6 @@ export type RoomsUncheckedUpdateWithoutWinnerInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participants?: Prisma.ParticipantsUncheckedUpdateManyWithoutRoomNestedInput
   invitations?: Prisma.InvitationsUncheckedUpdateManyWithoutRoomNestedInput
@@ -862,7 +822,6 @@ export type RoomsUncheckedUpdateManyWithoutWinnerInput = {
   end_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumROOM_STATUSFieldUpdateOperationsInput | $Enums.ROOM_STATUS
   owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_token?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -922,7 +881,6 @@ export type RoomsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   end_at?: boolean
   status?: boolean
   owner_id?: boolean
-  owner_token?: boolean
   winner_restaurant_id?: boolean
   created_at?: boolean
   participants?: boolean | Prisma.Rooms$participantsArgs<ExtArgs>
@@ -939,7 +897,6 @@ export type RoomsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   end_at?: boolean
   status?: boolean
   owner_id?: boolean
-  owner_token?: boolean
   winner_restaurant_id?: boolean
   created_at?: boolean
   winner?: boolean | Prisma.Rooms$winnerArgs<ExtArgs>
@@ -952,7 +909,6 @@ export type RoomsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   end_at?: boolean
   status?: boolean
   owner_id?: boolean
-  owner_token?: boolean
   winner_restaurant_id?: boolean
   created_at?: boolean
   winner?: boolean | Prisma.Rooms$winnerArgs<ExtArgs>
@@ -965,12 +921,11 @@ export type RoomsSelectScalar = {
   end_at?: boolean
   status?: boolean
   owner_id?: boolean
-  owner_token?: boolean
   winner_restaurant_id?: boolean
   created_at?: boolean
 }
 
-export type RoomsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_name" | "start_at" | "end_at" | "status" | "owner_id" | "owner_token" | "winner_restaurant_id" | "created_at", ExtArgs["result"]["rooms"]>
+export type RoomsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_name" | "start_at" | "end_at" | "status" | "owner_id" | "winner_restaurant_id" | "created_at", ExtArgs["result"]["rooms"]>
 export type RoomsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   participants?: boolean | Prisma.Rooms$participantsArgs<ExtArgs>
   invitations?: boolean | Prisma.Rooms$invitationsArgs<ExtArgs>
@@ -1000,7 +955,6 @@ export type $RoomsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     end_at: Date
     status: $Enums.ROOM_STATUS
     owner_id: string
-    owner_token: string
     winner_restaurant_id: string | null
     created_at: Date
   }, ExtArgs["result"]["rooms"]>
@@ -1436,7 +1390,6 @@ export interface RoomsFieldRefs {
   readonly end_at: Prisma.FieldRef<"Rooms", 'DateTime'>
   readonly status: Prisma.FieldRef<"Rooms", 'ROOM_STATUS'>
   readonly owner_id: Prisma.FieldRef<"Rooms", 'String'>
-  readonly owner_token: Prisma.FieldRef<"Rooms", 'String'>
   readonly winner_restaurant_id: Prisma.FieldRef<"Rooms", 'String'>
   readonly created_at: Prisma.FieldRef<"Rooms", 'DateTime'>
 }

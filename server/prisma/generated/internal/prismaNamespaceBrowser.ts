@@ -81,7 +81,6 @@ export const RoomsScalarFieldEnum = {
   end_at: 'end_at',
   status: 'status',
   owner_id: 'owner_id',
-  owner_token: 'owner_token',
   winner_restaurant_id: 'winner_restaurant_id',
   created_at: 'created_at'
 } as const
@@ -93,7 +92,6 @@ export const ParticipantsScalarFieldEnum = {
   id: 'id',
   room_id: 'room_id',
   email: 'email',
-  participant_name: 'participant_name',
   role: 'role',
   joined_at: 'joined_at'
 } as const
@@ -105,7 +103,6 @@ export const InvitationsScalarFieldEnum = {
   id: 'id',
   room_id: 'room_id',
   email: 'email',
-  token: 'token',
   expires_at: 'expires_at',
   used_at: 'used_at',
   created_at: 'created_at'

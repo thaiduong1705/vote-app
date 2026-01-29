@@ -28,7 +28,6 @@ export type ParticipantsMinAggregateOutputType = {
   id: string | null
   room_id: string | null
   email: string | null
-  participant_name: string | null
   role: $Enums.PARTICIPANT_ROLE | null
   joined_at: Date | null
 }
@@ -37,7 +36,6 @@ export type ParticipantsMaxAggregateOutputType = {
   id: string | null
   room_id: string | null
   email: string | null
-  participant_name: string | null
   role: $Enums.PARTICIPANT_ROLE | null
   joined_at: Date | null
 }
@@ -46,7 +44,6 @@ export type ParticipantsCountAggregateOutputType = {
   id: number
   room_id: number
   email: number
-  participant_name: number
   role: number
   joined_at: number
   _all: number
@@ -57,7 +54,6 @@ export type ParticipantsMinAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  participant_name?: true
   role?: true
   joined_at?: true
 }
@@ -66,7 +62,6 @@ export type ParticipantsMaxAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  participant_name?: true
   role?: true
   joined_at?: true
 }
@@ -75,7 +70,6 @@ export type ParticipantsCountAggregateInputType = {
   id?: true
   room_id?: true
   email?: true
-  participant_name?: true
   role?: true
   joined_at?: true
   _all?: true
@@ -157,7 +151,6 @@ export type ParticipantsGroupByOutputType = {
   id: string
   room_id: string
   email: string
-  participant_name: string
   role: $Enums.PARTICIPANT_ROLE
   joined_at: Date
   _count: ParticipantsCountAggregateOutputType | null
@@ -187,7 +180,6 @@ export type ParticipantsWhereInput = {
   id?: Prisma.StringFilter<"Participants"> | string
   room_id?: Prisma.StringFilter<"Participants"> | string
   email?: Prisma.StringFilter<"Participants"> | string
-  participant_name?: Prisma.StringFilter<"Participants"> | string
   role?: Prisma.EnumPARTICIPANT_ROLEFilter<"Participants"> | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFilter<"Participants"> | Date | string
   room?: Prisma.XOR<Prisma.RoomsScalarRelationFilter, Prisma.RoomsWhereInput>
@@ -198,7 +190,6 @@ export type ParticipantsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  participant_name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joined_at?: Prisma.SortOrder
   room?: Prisma.RoomsOrderByWithRelationInput
@@ -213,7 +204,6 @@ export type ParticipantsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ParticipantsWhereInput | Prisma.ParticipantsWhereInput[]
   room_id?: Prisma.StringFilter<"Participants"> | string
   email?: Prisma.StringFilter<"Participants"> | string
-  participant_name?: Prisma.StringFilter<"Participants"> | string
   role?: Prisma.EnumPARTICIPANT_ROLEFilter<"Participants"> | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFilter<"Participants"> | Date | string
   room?: Prisma.XOR<Prisma.RoomsScalarRelationFilter, Prisma.RoomsWhereInput>
@@ -224,7 +214,6 @@ export type ParticipantsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  participant_name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joined_at?: Prisma.SortOrder
   _count?: Prisma.ParticipantsCountOrderByAggregateInput
@@ -239,7 +228,6 @@ export type ParticipantsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Participants"> | string
   room_id?: Prisma.StringWithAggregatesFilter<"Participants"> | string
   email?: Prisma.StringWithAggregatesFilter<"Participants"> | string
-  participant_name?: Prisma.StringWithAggregatesFilter<"Participants"> | string
   role?: Prisma.EnumPARTICIPANT_ROLEWithAggregatesFilter<"Participants"> | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeWithAggregatesFilter<"Participants"> | Date | string
 }
@@ -247,7 +235,6 @@ export type ParticipantsScalarWhereWithAggregatesInput = {
 export type ParticipantsCreateInput = {
   id?: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
   room: Prisma.RoomsCreateNestedOneWithoutParticipantsInput
@@ -258,7 +245,6 @@ export type ParticipantsUncheckedCreateInput = {
   id?: string
   room_id: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutParticipantInput
@@ -267,7 +253,6 @@ export type ParticipantsUncheckedCreateInput = {
 export type ParticipantsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   room?: Prisma.RoomsUpdateOneRequiredWithoutParticipantsNestedInput
@@ -278,7 +263,6 @@ export type ParticipantsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   room_id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUncheckedUpdateManyWithoutParticipantNestedInput
@@ -288,7 +272,6 @@ export type ParticipantsCreateManyInput = {
   id?: string
   room_id: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
 }
@@ -296,7 +279,6 @@ export type ParticipantsCreateManyInput = {
 export type ParticipantsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -305,7 +287,6 @@ export type ParticipantsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   room_id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -329,7 +310,6 @@ export type ParticipantsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  participant_name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joined_at?: Prisma.SortOrder
 }
@@ -338,7 +318,6 @@ export type ParticipantsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  participant_name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joined_at?: Prisma.SortOrder
 }
@@ -347,7 +326,6 @@ export type ParticipantsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   room_id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  participant_name?: Prisma.SortOrder
   role?: Prisma.SortOrder
   joined_at?: Prisma.SortOrder
 }
@@ -420,7 +398,6 @@ export type ParticipantsUpdateOneRequiredWithoutVotesNestedInput = {
 export type ParticipantsCreateWithoutRoomInput = {
   id?: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
   votes?: Prisma.VotesCreateNestedManyWithoutParticipantInput
@@ -429,7 +406,6 @@ export type ParticipantsCreateWithoutRoomInput = {
 export type ParticipantsUncheckedCreateWithoutRoomInput = {
   id?: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
   votes?: Prisma.VotesUncheckedCreateNestedManyWithoutParticipantInput
@@ -468,7 +444,6 @@ export type ParticipantsScalarWhereInput = {
   id?: Prisma.StringFilter<"Participants"> | string
   room_id?: Prisma.StringFilter<"Participants"> | string
   email?: Prisma.StringFilter<"Participants"> | string
-  participant_name?: Prisma.StringFilter<"Participants"> | string
   role?: Prisma.EnumPARTICIPANT_ROLEFilter<"Participants"> | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFilter<"Participants"> | Date | string
 }
@@ -476,7 +451,6 @@ export type ParticipantsScalarWhereInput = {
 export type ParticipantsCreateWithoutVotesInput = {
   id?: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
   room: Prisma.RoomsCreateNestedOneWithoutParticipantsInput
@@ -486,7 +460,6 @@ export type ParticipantsUncheckedCreateWithoutVotesInput = {
   id?: string
   room_id: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
 }
@@ -510,7 +483,6 @@ export type ParticipantsUpdateToOneWithWhereWithoutVotesInput = {
 export type ParticipantsUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   room?: Prisma.RoomsUpdateOneRequiredWithoutParticipantsNestedInput
@@ -520,7 +492,6 @@ export type ParticipantsUncheckedUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   room_id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -528,7 +499,6 @@ export type ParticipantsUncheckedUpdateWithoutVotesInput = {
 export type ParticipantsCreateManyRoomInput = {
   id?: string
   email: string
-  participant_name: string
   role?: $Enums.PARTICIPANT_ROLE
   joined_at?: Date | string
 }
@@ -536,7 +506,6 @@ export type ParticipantsCreateManyRoomInput = {
 export type ParticipantsUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUpdateManyWithoutParticipantNestedInput
@@ -545,7 +514,6 @@ export type ParticipantsUpdateWithoutRoomInput = {
 export type ParticipantsUncheckedUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   votes?: Prisma.VotesUncheckedUpdateManyWithoutParticipantNestedInput
@@ -554,7 +522,6 @@ export type ParticipantsUncheckedUpdateWithoutRoomInput = {
 export type ParticipantsUncheckedUpdateManyWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  participant_name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumPARTICIPANT_ROLEFieldUpdateOperationsInput | $Enums.PARTICIPANT_ROLE
   joined_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -594,7 +561,6 @@ export type ParticipantsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   room_id?: boolean
   email?: boolean
-  participant_name?: boolean
   role?: boolean
   joined_at?: boolean
   room?: boolean | Prisma.RoomsDefaultArgs<ExtArgs>
@@ -606,7 +572,6 @@ export type ParticipantsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   room_id?: boolean
   email?: boolean
-  participant_name?: boolean
   role?: boolean
   joined_at?: boolean
   room?: boolean | Prisma.RoomsDefaultArgs<ExtArgs>
@@ -616,7 +581,6 @@ export type ParticipantsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   room_id?: boolean
   email?: boolean
-  participant_name?: boolean
   role?: boolean
   joined_at?: boolean
   room?: boolean | Prisma.RoomsDefaultArgs<ExtArgs>
@@ -626,12 +590,11 @@ export type ParticipantsSelectScalar = {
   id?: boolean
   room_id?: boolean
   email?: boolean
-  participant_name?: boolean
   role?: boolean
   joined_at?: boolean
 }
 
-export type ParticipantsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_id" | "email" | "participant_name" | "role" | "joined_at", ExtArgs["result"]["participants"]>
+export type ParticipantsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "room_id" | "email" | "role" | "joined_at", ExtArgs["result"]["participants"]>
 export type ParticipantsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   room?: boolean | Prisma.RoomsDefaultArgs<ExtArgs>
   votes?: boolean | Prisma.Participants$votesArgs<ExtArgs>
@@ -654,7 +617,6 @@ export type $ParticipantsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     room_id: string
     email: string
-    participant_name: string
     role: $Enums.PARTICIPANT_ROLE
     joined_at: Date
   }, ExtArgs["result"]["participants"]>
@@ -1085,7 +1047,6 @@ export interface ParticipantsFieldRefs {
   readonly id: Prisma.FieldRef<"Participants", 'String'>
   readonly room_id: Prisma.FieldRef<"Participants", 'String'>
   readonly email: Prisma.FieldRef<"Participants", 'String'>
-  readonly participant_name: Prisma.FieldRef<"Participants", 'String'>
   readonly role: Prisma.FieldRef<"Participants", 'PARTICIPANT_ROLE'>
   readonly joined_at: Prisma.FieldRef<"Participants", 'DateTime'>
 }
