@@ -4,7 +4,6 @@ import { Queue } from "bullmq";
 import { JOB_NAMES, QUEUE_NAMES } from "src/utils/constant";
 import { SendInvitesDto } from "./dto/send-invites.dto";
 import { PrismaService } from "src/config/database.config";
-import { randomBytes } from "node:crypto";
 import { JwtService } from "@nestjs/jwt";
 import { getNameFromEmail } from "src/utils/helpers";
 

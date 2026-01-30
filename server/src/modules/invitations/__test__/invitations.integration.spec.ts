@@ -6,6 +6,7 @@ import { ConfigService } from "@nestjs/config";
 import { Queue } from "bullmq";
 import { getQueueToken } from "@nestjs/bullmq";
 import { QUEUE_NAMES, JOB_NAMES } from "../../../utils/constant";
+import { JwtService } from "@nestjs/jwt";
 
 /**
  * INTEGRATION TEST
@@ -21,6 +22,7 @@ describe("InvitationsService - Integration with Email Queue", () => {
 	let prisma: PrismaService;
 	let emailWorker: EmailWorker;
 	let emailQueue: Queue;
+	let jwtService: JwtService;
 	let mockTransporter: any;
 
 	beforeEach(async () => {
@@ -61,6 +63,13 @@ describe("InvitationsService - Integration with Email Queue", () => {
 						add: jest.fn(),
 					},
 				},
+				{
+					provide: JwtService,
+					useValue: {
+						verify: jest.fn(),
+						sign: jest.fn().mockReturnValue("mock-invite-token-123"),
+					},
+				},
 			],
 		}).compile();
 
@@ -68,6 +77,7 @@ describe("InvitationsService - Integration with Email Queue", () => {
 		prisma = module.get(PrismaService);
 		emailWorker = module.get(EmailWorker);
 		emailQueue = module.get(getQueueToken(QUEUE_NAMES.EMAIL));
+		jwtService = module.get(JwtService);
 
 		// Replace worker's transporter with mock
 		(emailWorker as any).transporter = mockTransporter;
@@ -78,18 +88,19 @@ describe("InvitationsService - Integration with Email Queue", () => {
 			// Setup test data
 			const dto = {
 				roomId: "room-123",
-				ownerToken: "valid-token",
 				emails: ["user1@test.com", "user2@test.com"],
 			};
+			const ownerToken = "valid-jwt-token";
 
 			const mockRoom = {
 				id: "room-123",
-				owner_token: "valid-token",
 				room_name: "Test Room",
 				end_at: new Date("2026-01-15T13:00:00Z"),
-				participants: [{ email: "owner@test.com", participant_name: "Owner" }],
+				status: "ACTIVE",
+				participants: [{ email: "owner@test.com", role: "HOST" }],
 			};
 
+			jest.spyOn(jwtService, "verify").mockReturnValue({ roomId: "room-123", email: "owner@test.com" });
 			jest.spyOn(prisma.rooms, "findUnique").mockResolvedValue(mockRoom as any);
 			jest.spyOn(prisma.invitations, "createMany").mockResolvedValue({ count: 2 } as any);
 
@@ -101,7 +112,7 @@ describe("InvitationsService - Integration with Email Queue", () => {
 			});
 
 			// Step 1: Service queues jobs
-			await service.sendInvites(dto);
+			await service.sendInvites(dto, ownerToken);
 
 			// Verify jobs were queued
 			expect(emailQueue.add).toHaveBeenCalledTimes(2);
@@ -137,19 +148,19 @@ describe("InvitationsService - Integration with Email Queue", () => {
 		it("should include correct invite tokens in emails", async () => {
 			const dto = {
 				roomId: "room-123",
-				ownerToken: "valid-token",
 				emails: ["user1@test.com"],
 			};
+			const ownerToken = "valid-jwt-token";
 
 			const mockRoom = {
 				id: "room-123",
-				owner_token: "valid-token",
 				room_name: "Test Room",
-				owner_name: "Alice",
 				end_at: new Date("2026-01-15T13:00:00Z"),
-				participants: [{ email: "owner@test.com", participant_name: "Owner" }],
+				status: "ACTIVE",
+				participants: [{ email: "owner@test.com", role: "HOST" }],
 			};
 
+			jest.spyOn(jwtService, "verify").mockReturnValue({ roomId: "room-123", email: "owner@test.com" });
 			jest.spyOn(prisma.rooms, "findUnique").mockResolvedValue(mockRoom as any);
 			jest.spyOn(prisma.invitations, "createMany").mockResolvedValue({ count: 1 } as any);
 
@@ -159,7 +170,7 @@ describe("InvitationsService - Integration with Email Queue", () => {
 				return Promise.resolve({ id: "job-id" });
 			});
 
-			await service.sendInvites(dto);
+			await service.sendInvites(dto, ownerToken);
 
 			// Process the job
 			await emailWorker.process(queuedJobs[0] as any);
@@ -172,23 +183,24 @@ describe("InvitationsService - Integration with Email Queue", () => {
 		it("should handle email sending failures", async () => {
 			const dto = {
 				roomId: "room-123",
-				ownerToken: "valid-token",
 				emails: ["user1@test.com"],
 			};
+			const ownerToken = "valid-jwt-token";
 
 			const mockRoom = {
 				id: "room-123",
-				owner_token: "valid-token",
 				room_name: "Test Room",
 				end_at: new Date("2026-01-15T13:00:00Z"),
-				participants: [{ email: "owner@test.com", participant_name: "Owner" }],
+				status: "ACTIVE",
+				participants: [{ email: "owner@test.com", role: "HOST" }],
 			};
-
-			jest.spyOn(prisma.rooms, "findUnique").mockResolvedValue(mockRoom as any);
-			jest.spyOn(prisma.invitations, "createMany").mockResolvedValue({ count: 1 } as any);
 
 			// Mock email sending failure
 			mockTransporter.sendMail.mockRejectedValue(new Error("SMTP connection failed"));
+
+			jest.spyOn(jwtService, "verify").mockReturnValue({ roomId: "room-123", email: "owner@test.com" });
+			jest.spyOn(prisma.rooms, "findUnique").mockResolvedValue(mockRoom as any);
+			jest.spyOn(prisma.invitations, "createMany").mockResolvedValue({ count: 1 } as any);
 
 			const queuedJobs: any[] = [];
 			(emailQueue.add as jest.Mock).mockImplementation((jobName, jobData) => {
@@ -196,7 +208,7 @@ describe("InvitationsService - Integration with Email Queue", () => {
 				return Promise.resolve({ id: "job-id" });
 			});
 
-			await service.sendInvites(dto);
+			await service.sendInvites(dto, ownerToken);
 
 			// Worker should throw error when processing
 			await expect(emailWorker.process(queuedJobs[0] as any)).rejects.toThrow("SMTP connection failed");

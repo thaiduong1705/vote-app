@@ -2,7 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "./common/pipes/validation.pipe";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
-import cookieParser from "cookie-parser";
+const cookieParser = require("cookie-parser");
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);

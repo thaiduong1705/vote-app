@@ -17,19 +17,16 @@ export class RoomsService {
 	async scheduleRoomClosure(roomId: string, closeAt: Date) {}
 
 	async createRoom(dto: CreateRoomDto) {
-		const ownerToken = this.generateToken(32, "base64url");
 		const ownerId = this.generateToken(16, "hex");
 		const room = await this.prismaService.rooms.create({
 			data: {
 				room_name: dto.roomName,
-				owner_token: ownerToken,
 				owner_id: ownerId,
 				start_at: dto.startAt,
 				end_at: dto.endAt,
 				participants: {
 					create: {
 						id: ownerId,
-						participant_name: dto.ownerName,
 						email: dto.ownerEmail,
 						joined_at: new Date(),
 						role: PARTICIPANT_ROLE.HOST,

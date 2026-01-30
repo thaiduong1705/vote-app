@@ -6,9 +6,6 @@ export class CreateRoomDto {
 	@MinLength(3)
 	roomName: string;
 
-	@IsString()
-	ownerName: string;
-
 	@IsEmail()
 	ownerEmail: string;
 
