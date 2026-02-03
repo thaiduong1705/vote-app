@@ -2,10 +2,14 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { PrismaService } from "src/config/database.config";
 import { SubmitVoteDto } from "./dto/submit-vote.dto";
 import { ROOM_STATUS } from "prisma/generated/enums";
+import { RealtimeGateway } from "src/realtime/realtime.gateway";
 
 @Injectable()
 export class VotesService {
-	constructor(private readonly prismaService: PrismaService) {}
+	constructor(
+		private readonly prismaService: PrismaService,
+		private readonly realtimeGateway: RealtimeGateway,
+	) {}
 
 	async submitVote(dto: SubmitVoteDto, userId: string) {
 		const room = await this.prismaService.rooms.findUnique({
@@ -53,6 +57,13 @@ export class VotesService {
 				restaurant: true,
 				participant: true,
 			},
+		});
+
+		this.realtimeGateway.broadcastVoteUpdate(dto.roomId, {
+			voteId: vote.id,
+			participantEmail: vote.participant.email,
+			restaurantName: vote.restaurant.name,
+			votedAt: vote.voted_at,
 		});
 
 		return vote;

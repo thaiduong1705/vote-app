@@ -1,20 +1,16 @@
-import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
-import { Queue } from "bullmq";
 import { PrismaService } from "src/config/database.config";
-import { QUEUE_NAMES } from "src/utils/constant";
 import { CreateRoomDto } from "./dto/create-room-dto";
 import { randomBytes } from "node:crypto";
 import { PARTICIPANT_ROLE } from "prisma/generated/enums";
+import { SchedulerService } from "src/workers/scheduler.service";
 
 @Injectable()
 export class RoomsService {
 	constructor(
-		@InjectQueue(QUEUE_NAMES.ROOM_CLOSER) private roomCloserQueue: Queue,
 		private prismaService: PrismaService,
+		private schedulerService: SchedulerService,
 	) {}
-
-	async scheduleRoomClosure(roomId: string, closeAt: Date) {}
 
 	async createRoom(dto: CreateRoomDto) {
 		const ownerId = this.generateToken(16, "hex");
@@ -34,6 +30,8 @@ export class RoomsService {
 				},
 			},
 		});
+
+		await this.schedulerService.scheduleReminder(room.id, dto.endAt);
 		return room;
 	}
 

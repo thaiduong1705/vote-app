@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Test</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+
+    .connected {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .disconnected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    input,
+    button {
+      padding: 10px;
+      margin: 5px;
+    }
+
+    #logs {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+    }
+
+    .log-info {
+      color: #0066cc;
+    }
+
+    .log-success {
+      color: #28a745;
+    }
+
+    .log-error {
+      color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🔌 WebSocket Connection Test</h1>
+
+  <div id="status" class="status disconnected">
+    Status: <span id="statusText">Disconnected</span>
+  </div>
+
+  <div id="connectionInfo" style="display: none;">
+    <p><strong>Socket ID:</strong> <span id="socketId"></span></p>
+  </div>
+
+  <h3>Join Room</h3>
+  <input type="text" id="roomId" placeholder="Room ID" value="test-room-123">
+  <button onclick="joinRoom()">Join Room</button>
+  <button onclick="leaveRoom()">Leave Room</button>
+
+  <h3>Logs</h3>
+  <button onclick="clearLogs()">Clear Logs</button>
+  <div id="logs"></div>
+
+  <script>
+    const socket = io('http://localhost:3000/ws', {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
+
+    function addLog(message, type = 'info') {
+      const logs = document.getElementById('logs');
+      const entry = document.createElement('div');
+      entry.className = `log-entry log-${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logs.appendChild(entry);
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    function updateStatus(connected, socketId = null) {
+      const statusDiv = document.getElementById('status');
+      const statusText = document.getElementById('statusText');
+      const connectionInfo = document.getElementById('connectionInfo');
+
+      if (connected) {
+        statusDiv.className = 'status connected';
+        statusText.textContent = 'Connected ✓';
+        connectionInfo.style.display = 'block';
+        document.getElementById('socketId').textContent = socketId;
+      } else {
+        statusDiv.className = 'status disconnected';
+        statusText.textContent = 'Disconnected ✗';
+        connectionInfo.style.display = 'none';
+      }
+    }
+
+    socket.on('connect', () => {
+      addLog(`Connected successfully! Socket ID: ${socket.id}`, 'success');
+      updateStatus(true, socket.id);
+    });
+
+    socket.on('disconnect', (reason) => {
+      addLog(`Disconnected: ${reason}`, 'error');
+      updateStatus(false);
+    });
+
+    socket.on('connect_error', (error) => {
+      addLog(`Connection error: ${error.message}`, 'error');
+    });
+
+    socket.on('vote-updated', (data) => {
+      addLog(`Vote updated: ${JSON.stringify(data)}`, 'info');
+    });
+
+    socket.on('room-closed', (data) => {
+      addLog(`Room closed: ${JSON.stringify(data)}`, 'info');
+    });
+
+    function joinRoom() {
+      const roomId = document.getElementById('roomId').value;
+      if (!roomId) {
+        addLog('Please enter a room ID', 'error');
+        return;
+      }
+      socket.emit('join-room', { roomId });
+      addLog(`Joining room: ${roomId}`, 'info');
+    }
+
+    function leaveRoom() {
+      const roomId = document.getElementById('roomId').value;
+      if (!roomId) {
+        addLog('Please enter a room ID', 'error');
+        return;
+      }
+      socket.emit('leave-room', { roomId });
+      addLog(`Leaving room: ${roomId}`, 'info');
+    }
+
+    function clearLogs() {
+      document.getElementById('logs').innerHTML = '';
+    }
+
+    // Initial log
+    addLog('Attempting to connect to ws://localhost:3000/ws...', 'info');
+  </script>
+</body>
+
+</html>

@@ -12,6 +12,7 @@ import { InvitationsModule } from "./modules/invitations/invitations.module";
 import { RestaurantsModule } from "./modules/restaurants/restaurants.module";
 import { VotesModule } from "./modules/votes/votes.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
+import { RealtimeModule } from "./realtime/realtime.module";
 
 @Module({
 	imports: [
@@ -45,6 +46,7 @@ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 		InvitationsModule,
 		RestaurantsModule,
 		VotesModule,
+		RealtimeModule,
 	],
 	providers: [
 		PrismaService,

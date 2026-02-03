@@ -6,11 +6,15 @@ import { JOB_NAMES, QUEUE_NAMES } from "src/utils/constant";
 import { emailTemplates } from "src/templates/email.templates";
 import { ConfigService } from "@nestjs/config";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { PrismaService } from "src/config/database.config";
 
 @Processor(QUEUE_NAMES.EMAIL)
 export class EmailWorker extends WorkerHost {
 	private transporter: Transporter<SMTPTransport.SentMessageInfo, SMTPTransport.Options>;
-	constructor(private configService: ConfigService) {
+	constructor(
+		private configService: ConfigService,
+		private readonly prismaService: PrismaService,
+	) {
 		super();
 		this.transporter = nodemailer.createTransport({
 			host: this.configService.get<string>("EMAIL_HOST"),
@@ -55,23 +59,45 @@ export class EmailWorker extends WorkerHost {
 	}
 
 	private async sendReminder(data: any) {
-		const { to, roomName, participantName, roomId, endAt } = data;
+		const { roomId } = data;
+		// fetch user in that room id have not voted yet
+		const users = await this.prismaService.participants.findMany({
+			where: {
+				room_id: data.roomId,
+				votes: {
+					none: {},
+				},
+			},
+			select: {
+				email: true,
+				room: {
+					select: {
+						room_name: true,
+						end_at: true,
+					},
+				},
+			},
+		});
+
 		const roomLink = `${this.configService.get<string>("FRONTEND_URL")}/room/${roomId}`;
 
-		const template = emailTemplates.reminder({
-			roomLink,
-			roomName,
-			participantName,
-			endAt: new Date(endAt).toDateString(),
-		});
+		for (const user of users) {
+			const template = emailTemplates.reminder({
+				roomLink,
+				roomName: user.room.room_name,
+				participantName: user.email, // Use email as identifier since name field doesn't exist
+				endAt: new Date(user.room.end_at).toDateString(),
+			});
 
-		await this.transporter.sendMail({
-			from: `"Vote App" <${this.configService.get<string>("EMAIL_USER")}>`,
-			to,
-			subject: template.subject,
-			text: template.text,
-			html: template.html,
-		});
-		console.log(`Reminder email sent to ${to} for room ${roomName}`);
+			await this.transporter.sendMail({
+				from: `"Vote App" <${this.configService.get<string>("EMAIL_USER")}>`,
+				to: user.email,
+				subject: template.subject,
+				text: template.text,
+				html: template.html,
+			});
+		}
+
+		console.log(`Reminder emails sent to ${users.length} participants for room ID ${roomId}`);
 	}
 }
