@@ -7,26 +7,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 
 @Module({
-	imports: [
-		WorkerModule,
-		JwtModule.registerAsync({
-			global: true,
-			useFactory: (configService: ConfigService) => ({
-				// Cách 1: Dùng symmetric key (HS256) - Đơn giản
-				secret: configService.get<string>("JWT_SECRET"),
-
-				// Cách 2: Dùng asymmetric keys (RS256) - An toàn hơn
-				// Uncomment phần này nếu muốn dùng RSA
-				// privateKey: configService.get<string>("JWT_PRIVATE_KEY"),
-				// publicKey: configService.get<string>("JWT_PUBLIC_KEY"),
-				// signOptions: {
-				//   expiresIn: "7d",
-				//   algorithm: "RS256",
-				// },
-			}),
-			inject: [ConfigService],
-		}),
-	],
+	imports: [WorkerModule],
 	controllers: [InvitationsController],
 	providers: [InvitationsService, PrismaService],
 	exports: [InvitationsService],

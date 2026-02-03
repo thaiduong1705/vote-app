@@ -14,6 +14,7 @@ export const envSchema = z.object({
 	SMTP_PASS: z.string().min(1, "SMTP_PASS is required"),
 	SMTP_FROM: z.string().min(1, "SMTP_FROM is required"),
 	FRONTEND_URL: z.string().url().default("http://localhost:5173"),
+	JWT_SECRET: z.string(),
 });
 
 // Infer TypeScript type from schema

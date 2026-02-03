@@ -23,4 +23,6 @@ lerna-debug.log*
 .temp
 .tmp
 
-
+.github
+.opencode
+.agents

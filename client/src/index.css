@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+:root {
+	/* Typography */
+	font-family:
+		"Roboto",
+		system-ui,
+		-apple-system,
+		sans-serif;
+	line-height: 1.6;
+	font-weight: 400;
+
+	/* Fresh Green Nature Color Palette */
+	--color-forest-green: #059669;
+	--color-deep-green: #047857;
+	--color-lime: #65a30d;
+	--color-emerald: #10b981;
+	--color-green-50: #f0fdf4;
+	--color-green-100: #dcfce7;
+	--color-green-200: #bbf7d0;
+	--color-green-600: #16a34a;
+	--color-green-700: #15803d;
+	--color-slate-900: #0f172a;
+	--color-slate-700: #334155;
+	--color-slate-600: #475569;
+	--color-slate-500: #64748b;
+	--color-white: #ffffff;
+	--color-error: #ef4444;
+	--color-success: #10b981;
+	--color-warning: #f59e0b;
+
+	color-scheme: light;
+	color: var(--color-slate-900);
+	background: linear-gradient(135deg, var(--color-green-50) 0%, var(--color-green-100) 100%);
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+a {
+	font-weight: 500;
+	color: var(--color-forest-green);
+	text-decoration: inherit;
+	transition: color 0.2s ease;
+}
+
+a:hover {
+	color: var(--color-deep-green);
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+	background: linear-gradient(135deg, var(--color-green-50) 0%, var(--color-green-100) 50%, #d1fae5 100%);
+	background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height: 1.2;
+	font-weight: 700;
+	color: var(--color-slate-900);
+}
+
+button {
+	font-family: inherit;
+	cursor: pointer;
+}
+
+/* Custom animations */
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@keyframes pulse-glow {
+	0%,
+	100% {
+		box-shadow: 0 0 20px rgba(5, 150, 105, 0.3);
+	}
+	50% {
+		box-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+	}
+}
+
+@keyframes slide-in-up {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-float {
+	animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+	animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-in {
+	animation: slide-in-up 0.5s ease-out;
+}
+
