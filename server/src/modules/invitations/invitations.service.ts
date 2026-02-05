@@ -40,7 +40,6 @@ export class InvitationsService {
 			return {
 				room_id: room.id,
 				email,
-
 				expires_at: expireAt,
 			};
 		});

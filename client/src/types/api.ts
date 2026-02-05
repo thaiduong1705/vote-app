@@ -8,13 +8,11 @@ export interface CreateRoomRequest {
 
 export interface SendInvitesRequest {
 	roomId: string;
-	ownerToken: string;
 	emails: string[];
 }
 
 export interface JoinRoomRequest {
 	token: string;
-	name: string;
 }
 
 export interface CreateRestaurantRequest {
@@ -77,4 +75,5 @@ export interface RoomVotesResponse {
 	votes: Vote[];
 	restaurants: Restaurant[];
 	participants: Participant[];
+	currentUserRole?: string | null;
 }

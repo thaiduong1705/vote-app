@@ -18,7 +18,7 @@ import { Server, Socket } from "socket.io";
 	namespace: "/ws",
 })
 export class RealtimeGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect {
-	server: Server;
+	private server: Server;
 
 	afterInit(server: Server) {
 		this.server = server;
@@ -51,5 +51,11 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayInit, OnGa
 
 	broadcastRoomClosed(roomId: string, data: any) {
 		this.server.to(`room:${roomId}`).emit("room-closed", data);
+	}
+
+	broadcastRestaurantsUpdated(roomId: string) {
+		this.server.to(`room:${roomId}`).emit("restaurants-updated", {
+			timestamp: new Date().toISOString(),
+		});
 	}
 }

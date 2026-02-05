@@ -2,9 +2,34 @@
 
 **Files:**
 
+- Update: `client/src/pages/CreateRoomPage.tsx` (Add invite email UI after room creation)
 - Create: `client/src/pages/JoinRoomPage.tsx`
+- Update: `client/src/api/client.ts` (Add pagination to getRestaurants)
 
-**Step 1: Create JoinRoomPage**
+**Changes Summary:**
+
+1. After creating a room, show a modal to invite users via email
+2. Added default page=1 and limit=10 to restaurants API
+3. Allow skipping invites and going directly to room
+
+**Step 1: Update CreateRoomPage with Invite Modal**
+
+The CreateRoomPage has been updated to:
+
+- Show an invite form modal after successful room creation
+- Allow entering multiple email addresses (comma, semicolon, or newline separated)
+- Provide "Send Invites" and "Skip & Go to Room" options
+- Auto-redirect to room after sending invites successfully
+
+**Step 2: Update API Client**
+
+The `getRestaurants` API now accepts optional pagination parameters:
+
+```typescript
+async getRestaurants(page: number = 1, limit: number = 10): Promise<Restaurant[]>
+```
+
+**Step 3: Create JoinRoomPage**
 
 Create `client/src/pages/JoinRoomPage.tsx`:
 
@@ -85,3 +110,4 @@ Expected: Can join via invite token link.
 git add client/src/pages/JoinRoomPage.tsx
 git commit -m "feat: join room page UI"
 ```
+

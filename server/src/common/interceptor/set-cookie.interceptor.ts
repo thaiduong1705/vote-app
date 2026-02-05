@@ -21,9 +21,8 @@ export class SetCookieInterceptor implements NestInterceptor {
 			map((data) => {
 				const response = context.switchToHttp().getResponse<Response>();
 
-				// Nếu data có participantToken, set cookie
-				if (data?.ownerToken) {
-					response.cookie("owner_token", data.ownerToken, {
+				if (data?.token) {
+					response.cookie("token", data.token, {
 						httpOnly: true,
 						secure: process.env.NODE_ENV === "production",
 						sameSite: "lax",

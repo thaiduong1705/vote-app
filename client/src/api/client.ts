@@ -45,7 +45,6 @@ export const api = {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
-			credentials: "include",
 		});
 		if (!res.ok) {
 			throw new Error(`Failed to join room: ${res.statusText}`);
@@ -53,8 +52,8 @@ export const api = {
 		return res.json();
 	},
 
-	async getRestaurants(): Promise<Restaurant[]> {
-		const res = await fetch(`${API_BASE}/restaurants`);
+	async getRestaurants(name?: string): Promise<Restaurant[]> {
+		const res = await fetch(`${API_BASE}/restaurants${name ? `?name=${encodeURIComponent(name)}` : ""}`);
 		if (!res.ok) {
 			throw new Error(`Failed to fetch restaurants: ${res.statusText}`);
 		}
@@ -88,9 +87,37 @@ export const api = {
 	},
 
 	async getRoomVotes(roomId: string): Promise<RoomVotesResponse> {
-		const res = await fetch(`${API_BASE}/votes/room/${roomId}`);
+		const res = await fetch(`${API_BASE}/votes/room/${roomId}`, {
+			credentials: "include",
+		});
 		if (!res.ok) {
 			throw new Error(`Failed to fetch room votes: ${res.statusText}`);
+		}
+		return res.json();
+	},
+
+	async verifyOwner(roomId: string): Promise<{ isOwner: boolean; role?: string }> {
+		const res = await fetch(`${API_BASE}/rooms/${roomId}/verify-owner`, {
+			credentials: "include",
+		});
+		if (!res.ok) {
+			throw new Error(`Failed to verify owner: ${res.statusText}`);
+		}
+		return res.json();
+	},
+
+	async addNewRestaurant(
+		roomId: string,
+		restaurantName: string,
+	): Promise<{ success: boolean; restaurant: Restaurant; message: string }> {
+		const res = await fetch(`${API_BASE}/restaurants/owner/add-new`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ roomId, restaurantName }),
+			credentials: "include",
+		});
+		if (!res.ok) {
+			throw new Error(`Failed to add restaurant: ${res.statusText}`);
 		}
 		return res.json();
 	},

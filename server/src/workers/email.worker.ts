@@ -16,22 +16,32 @@ export class EmailWorker extends WorkerHost {
 		private readonly prismaService: PrismaService,
 	) {
 		super();
-		this.transporter = nodemailer.createTransport({
-			host: this.configService.get<string>("EMAIL_HOST"),
-			port: this.configService.get<number>("EMAIL_PORT"),
-			secure: true,
-			auth: {
-				user: this.configService.get<string>("EMAIL_USER"),
-				pass: this.configService.get<string>("EMAIL_PASS"),
-			},
-		});
+		try {
+			const smtpPort = this.configService.get<number>("SMTP_PORT");
+			// Port 465 = implicit TLS (secure: true), Port 587 = STARTTLS (secure: false)
+			const isSecurePort = smtpPort === 465;
+
+			this.transporter = nodemailer.createTransport({
+				host: this.configService.get<string>("SMTP_HOST"),
+				port: smtpPort,
+				secure: isSecurePort, // true for 465 (implicit TLS), false for 587 (STARTTLS)
+				auth: {
+					user: this.configService.get<string>("SMTP_USER"),
+					pass: this.configService.get<string>("SMTP_PASS"),
+				},
+			});
+			console.log(`Email transporter created successfully (port: ${smtpPort}, secure: ${isSecurePort})`);
+		} catch (error) {
+			console.error("Error creating email transporter:", error);
+		}
 	}
+
 	async process(job: Job): Promise<any> {
 		switch (job.name) {
 			case JOB_NAMES.SEND_INVITE:
-				return this.sendInvite(job.data);
+				return await this.sendInvite(job.data);
 			case JOB_NAMES.SEND_REMINDER:
-				return this.sendReminder(job.data);
+				return await this.sendReminder(job.data);
 			default:
 				throw new Error(`Unknown job name: ${job.name}`);
 		}
@@ -48,56 +58,101 @@ export class EmailWorker extends WorkerHost {
 			endAt: new Date(endAt).toDateString(),
 		});
 
-		await this.transporter.sendMail({
-			from: `"Vote App" <${this.configService.get<string>("EMAIL_USER")}>`,
-			to,
-			subject: template.subject,
-			text: template.text,
-			html: template.html,
-		});
-		console.log(`Invite email sent to ${to} for room ${roomName}`);
-	}
-
-	private async sendReminder(data: any) {
-		const { roomId } = data;
-		// fetch user in that room id have not voted yet
-		const users = await this.prismaService.participants.findMany({
-			where: {
-				room_id: data.roomId,
-				votes: {
-					none: {},
-				},
-			},
-			select: {
-				email: true,
-				room: {
-					select: {
-						room_name: true,
-						end_at: true,
-					},
-				},
-			},
-		});
-
-		const roomLink = `${this.configService.get<string>("FRONTEND_URL")}/room/${roomId}`;
-
-		for (const user of users) {
-			const template = emailTemplates.reminder({
-				roomLink,
-				roomName: user.room.room_name,
-				participantName: user.email, // Use email as identifier since name field doesn't exist
-				endAt: new Date(user.room.end_at).toDateString(),
-			});
+		try {
+			// Test connection before sending
+			const testResult = await this.transporter.verify();
+			if (!testResult) {
+				throw new Error("SMTP connection verification failed");
+			}
 
 			await this.transporter.sendMail({
-				from: `"Vote App" <${this.configService.get<string>("EMAIL_USER")}>`,
-				to: user.email,
+				from: `"Vote App" <${this.configService.get<string>("SMTP_USER")}>`,
+				to,
 				subject: template.subject,
 				text: template.text,
 				html: template.html,
 			});
+			console.log(`Invite email sent to ${to} for room "${roomName}"`);
+		} catch (error: any) {
+			console.error(`Error sending invite email to ${to}:`, {
+				message: error?.message,
+				code: error?.code,
+				command: error?.command,
+				response: error?.response,
+				errno: error?.errno,
+				syscall: error?.syscall,
+			});
+			throw error;
 		}
+	}
 
-		console.log(`Reminder emails sent to ${users.length} participants for room ID ${roomId}`);
+	private async sendReminder(data: any) {
+		const { roomId } = data;
+
+		try {
+			// Test connection before sending
+			const testResult = await this.transporter.verify();
+			if (!testResult) {
+				throw new Error("SMTP connection verification failed");
+			}
+
+			// Fetch users in that room who have not voted yet
+			const users = await this.prismaService.participants.findMany({
+				where: {
+					room_id: roomId,
+					votes: {
+						none: {},
+					},
+				},
+				select: {
+					email: true,
+					room: {
+						select: {
+							room_name: true,
+							end_at: true,
+						},
+					},
+				},
+			});
+
+			const roomLink = `${this.configService.get<string>("FRONTEND_URL")}/room/${roomId}`;
+
+			let sentCount = 0;
+			for (const user of users) {
+				const template = emailTemplates.reminder({
+					roomLink,
+					roomName: user.room.room_name,
+					participantName: user.email,
+					endAt: new Date(user.room.end_at).toDateString(),
+				});
+
+				try {
+					await this.transporter.sendMail({
+						from: `"Vote App" <${this.configService.get<string>("SMTP_USER")}>`,
+						to: user.email,
+						subject: template.subject,
+						text: template.text,
+						html: template.html,
+					});
+					sentCount++;
+					console.log(`Reminder email sent to ${user.email}`);
+				} catch (userError: any) {
+					console.error(`Error sending reminder to ${user.email}:`, {
+						message: userError?.message,
+						code: userError?.code,
+					});
+				}
+			}
+
+			console.log(`Reminder emails sent to ${sentCount}/${users.length} participants for room ID ${roomId}`);
+		} catch (error: any) {
+			console.error(`Error in sendReminder for room ${roomId}:`, {
+				message: error?.message,
+				code: error?.code,
+				command: error?.command,
+				response: error?.response,
+			});
+			throw error;
+		}
 	}
 }

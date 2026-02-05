@@ -3,15 +3,17 @@ import { PrismaService } from "src/config/database.config";
 import { SubmitVoteDto } from "./dto/submit-vote.dto";
 import { ROOM_STATUS } from "prisma/generated/enums";
 import { RealtimeGateway } from "src/realtime/realtime.gateway";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class VotesService {
 	constructor(
 		private readonly prismaService: PrismaService,
 		private readonly realtimeGateway: RealtimeGateway,
+		private readonly jwtService: JwtService,
 	) {}
 
-	async submitVote(dto: SubmitVoteDto, userId: string) {
+	async submitVote(dto: SubmitVoteDto, participantEmail: string) {
 		const room = await this.prismaService.rooms.findUnique({
 			where: { id: dto.roomId },
 		});
@@ -26,8 +28,10 @@ export class VotesService {
 
 		const participant = await this.prismaService.participants.findUnique({
 			where: {
-				id: userId,
-				room_id: dto.roomId,
+				room_id_email: {
+					room_id: dto.roomId,
+					email: participantEmail,
+				},
 			},
 		});
 
@@ -39,7 +43,7 @@ export class VotesService {
 			where: {
 				room_id_participant_id: {
 					room_id: dto.roomId,
-					participant_id: userId,
+					participant_id: participant.id,
 				},
 			},
 			update: {
@@ -69,8 +73,8 @@ export class VotesService {
 		return vote;
 	}
 
-	async getRoomVotes(roomId: string) {
-		return this.prismaService.votes.findMany({
+	async getRoomVotes(roomId: string, token?: string) {
+		const votes = await this.prismaService.votes.findMany({
 			where: { room_id: roomId },
 			include: {
 				restaurant: true,
@@ -82,5 +86,45 @@ export class VotesService {
 				},
 			},
 		});
+
+		const restaurants = await this.prismaService.restaurants.findMany();
+		const participants = await this.prismaService.participants.findMany({
+			where: { room_id: roomId },
+			select: {
+				id: true,
+				email: true,
+				joined_at: true,
+				role: true,
+			},
+		});
+
+		let currentUserRole: string | null = null;
+
+		// Determine current user's role if token provided
+		if (token) {
+			try {
+				const decoded = this.jwtService.verify<{ participantEmail: string; roomId: string }>(token);
+
+				if (decoded && decoded.roomId === roomId) {
+					const participant = participants.find((p) => p.email === decoded.participantEmail);
+					if (participant) {
+						currentUserRole = participant.role;
+					}
+				}
+			} catch (error) {
+				// Invalid token, ignore
+			}
+		}
+
+		return {
+			votes,
+			restaurants,
+			participants: participants.map((p) => ({
+				id: p.id,
+				name: p.email.split("@")[0],
+				createdAt: p.joined_at,
+			})),
+			currentUserRole,
+		};
 	}
 }

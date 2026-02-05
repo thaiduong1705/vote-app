@@ -40,13 +40,13 @@ function CreateRoomPage() {
 	const validateForm = useCallback(() => {
 		// Room name min length: 3
 		if (formData.roomName.trim().length < 3) {
-			return "Room name must be at least 3 characters";
+			return "Tên phòng phải có ít nhất 3 ký tự";
 		}
 
 		// Email validation (basic)
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(formData.ownerEmail)) {
-			return "Please enter a valid email address";
+			return "Vui lòng nhập một địa chỉ email hợp lệ";
 		}
 
 		// Date validation
@@ -54,11 +54,11 @@ function CreateRoomPage() {
 		const end = new Date(formData.endAt);
 
 		if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-			return "Please enter valid dates";
+			return "Vui lòng nhập các ngày hợp lệ";
 		}
 
 		if (end <= start) {
-			return "End time must be after start time";
+			return "Thời gian kết thúc phải sau thời gian bắt đầu";
 		}
 
 		return null;
@@ -87,9 +87,10 @@ function CreateRoomPage() {
 					endAt: new Date(formData.endAt).toISOString(),
 				});
 
+				// Navigate directly to room
 				navigate(`/room/${result.room.id}?owner=true`);
 			} catch (err) {
-				setError("Failed to create room. Please try again.");
+				setError("Tạo phòng thất bại. Vui lòng thử lại.");
 				console.error(err);
 			} finally {
 				setLoading(false);
@@ -114,9 +115,11 @@ function CreateRoomPage() {
 							<span className="text-3xl">🍽️</span>
 						</div>
 						<h1 className="text-3xl lg:text-4xl font-bold bg-linear-to-r from-emerald-600 via-green-600 to-lime-600 bg-clip-text text-transparent mb-2">
-							Create Voting Room
+							Tạo Phòng Bình Chọn
 						</h1>
-						<p className="text-slate-600 text-base font-medium">Set up a fun voting session for your team 🎉</p>
+						<p className="text-slate-600 text-base font-medium">
+							Thiết lập một phiên bình chọn vui vẻ cho đội của bạn 🎉
+						</p>
 					</div>
 
 					{/* Form */}
@@ -129,7 +132,7 @@ function CreateRoomPage() {
 								<label
 									htmlFor="roomName"
 									className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
-									<span className="text-lg">🏷️</span> Room Name
+									<span className="text-lg">🏷️</span> Tên Phòng
 								</label>
 								<input
 									id="roomName"
@@ -139,7 +142,7 @@ function CreateRoomPage() {
 									required
 									minLength={3}
 									className="w-full px-4 py-2.5 border-2 border-green-200 rounded-2xl bg-white/80 focus:bg-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 text-slate-900 font-medium placeholder:text-slate-400"
-									placeholder="Team Lunch Vote 🍕"
+									placeholder="Bình Chọn Bữa Trưa 🍕"
 								/>
 							</div>
 
@@ -148,7 +151,7 @@ function CreateRoomPage() {
 								<label
 									htmlFor="ownerEmail"
 									className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
-									<span className="text-lg">📧</span> Your Email
+									<span className="text-lg">📧</span> Email Của Bạn
 								</label>
 								<input
 									id="ownerEmail"
@@ -157,7 +160,7 @@ function CreateRoomPage() {
 									onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
 									required
 									className="w-full px-4 py-2.5 border-2 border-green-200 rounded-2xl bg-white/80 focus:bg-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 text-slate-900 font-medium placeholder:text-slate-400"
-									placeholder="you@example.com"
+									placeholder="ban@example.com"
 								/>
 							</div>
 
@@ -166,7 +169,7 @@ function CreateRoomPage() {
 								<label
 									htmlFor="startAt"
 									className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
-									<span className="text-lg">🕐</span> Voting Starts At
+									<span className="text-lg">🕐</span> Bình Chọn Bắt Đầu Lúc
 								</label>
 								<input
 									id="startAt"
@@ -183,7 +186,7 @@ function CreateRoomPage() {
 								<label
 									htmlFor="endAt"
 									className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
-									<span className="text-lg">🏁</span> Voting Ends At
+									<span className="text-lg">🏁</span> Bình Chọn Kết Thúc Lúc
 								</label>
 								<input
 									id="endAt"
@@ -211,7 +214,7 @@ function CreateRoomPage() {
 							className="w-full bg-linear-to-r from-[#10B981] via-[#059669] to-[#65a30d] hover:from-[#65a30d] hover:via-[#10B981] hover:to-[#059669] disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2.5 text-base group relative overflow-hidden">
 							<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
 							<span className="text-2xl relative z-10">{loading ? "⏳" : "🎉"}</span>
-							<span className="relative z-10">{loading ? "Creating..." : "Create Voting Room"}</span>
+							<span className="relative z-10">{loading ? "Đang tạo..." : "Tạo Phòng Bình Chọn"}</span>
 						</button>
 					</form>
 				</div>

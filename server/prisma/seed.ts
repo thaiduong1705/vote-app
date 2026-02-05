@@ -1,5 +1,6 @@
 import { PrismaPg } from "node_modules/@prisma/adapter-pg/dist";
 import { PrismaClient } from "../prisma/generated/client";
+import "dotenv/config";
 
 const adapter = new PrismaPg({
 	connectionString: process.env.DATABASE_URL!,
@@ -8,14 +9,14 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
 	const restaurants = [
-		{ name: "Bún bò", menu_image_url: null },
-		{ name: "Bún chả", menu_image_url: null },
-		{ name: "Cơm tấm Long Xuyên", menu_image_url: null },
-		{ name: "Cơm sườn xa", menu_image_url: null },
-		{ name: "Hủ tiếu gần", menu_image_url: null },
-		{ name: "Cơm gà xối mỡ", menu_image_url: null },
-		{ name: "Bún riêu", menu_image_url: null },
-		{ name: "Cơm gà xé", menu_image_url: null },
+		{ name: "Bún bò" },
+		{ name: "Bún chả" },
+		{ name: "Cơm tấm Long Xuyên" },
+		{ name: "Cơm sườn xa" },
+		{ name: "Hủ tiếu gần" },
+		{ name: "Cơm gà xối mỡ" },
+		{ name: "Bún riêu" },
+		{ name: "Cơm gà xé" },
 	];
 
 	for (const restaurant of restaurants) {

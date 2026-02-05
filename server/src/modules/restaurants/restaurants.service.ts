@@ -8,14 +8,12 @@ export class RestaurantsService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async listAllRestaurants(paginationDto: PaginationDto) {
-		const { page, limit, name } = paginationDto;
-		const skip = (page - 1) * limit;
+		const { name } = paginationDto;
 
 		return this.prisma.restaurants.findMany({
 			where: name ? { name: { contains: name, mode: "insensitive" } } : {},
-			skip,
-			take: limit,
 			select: {
+				id: true,
 				name: true,
 			},
 		});

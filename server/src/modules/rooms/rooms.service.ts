@@ -39,7 +39,60 @@ export class RoomsService {
 		);
 
 		await this.schedulerService.scheduleReminder(room.id, dto.endAt);
-		return { room, ownerToken: token };
+		return { room, token };
+	}
+
+	async verifyOwner(roomId: string, token: string): Promise<{ isOwner: boolean; role?: string }> {
+		if (!token) {
+			return { isOwner: false };
+		}
+
+		try {
+			const decoded = this.jwtService.verify<{ participantEmail: string; roomId: string }>(token);
+
+			// Verify roomId matches
+			if (decoded.roomId !== roomId) {
+				return { isOwner: false };
+			}
+
+			// Check if participant is HOST in this room
+			const participant = await this.prismaService.participants.findFirst({
+				where: {
+					room_id: roomId,
+					email: decoded.participantEmail,
+					role: PARTICIPANT_ROLE.HOST,
+				},
+			});
+
+			if (participant) {
+				return { isOwner: true, role: participant.role };
+			}
+
+			return { isOwner: false };
+		} catch (error) {
+			return { isOwner: false };
+		}
+	}
+
+	async verifyRoomAccess(roomId: string, email: string): Promise<boolean> {
+		const participant = await this.prismaService.rooms.findFirst({
+			where: {
+				id: roomId,
+			},
+			include: {
+				participants: {
+					where: {
+						email: email,
+					},
+				},
+			},
+		});
+
+		if (!participant) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private generateToken(byteLength: number, stringType: BufferEncoding): string {
