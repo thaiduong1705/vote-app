@@ -87,10 +87,7 @@ export default function RoomPage() {
 
 			// Map votes with restaurant data
 			const votesWithRestaurants = votesResponse.votes.map((vote) => {
-				console.log("Restaurants:", votesResponse.restaurants);
-				console.log("Vote:", vote);
 				const restaurant = votesResponse.restaurants.find((r) => r.id === vote.restaurantId);
-				console.log("Matched restaurant:", restaurant, vote.restaurant_id);
 				return {
 					...vote,
 					restaurant: restaurant || { id: vote.restaurantId, name: "Unknown", menuImageUrl: null, createdAt: "" },

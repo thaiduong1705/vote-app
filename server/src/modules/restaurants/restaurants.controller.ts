@@ -83,9 +83,6 @@ export class RestaurantsController {
 				message: "Restaurant added successfully. All participants will see it.",
 			};
 		} catch (err) {
-			if (err instanceof BadRequestException) {
-				throw err;
-			}
 			throw new BadRequestException("Failed to add restaurant: " + err.message);
 		}
 	}

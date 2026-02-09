@@ -77,3 +77,10 @@ export interface RoomVotesResponse {
 	participants: Participant[];
 	currentUserRole?: string | null;
 }
+
+export interface VerifyAccessResponse {
+	hasAccess: boolean;
+	roomId?: string;
+	email?: string;
+	isOwner?: boolean;
+}

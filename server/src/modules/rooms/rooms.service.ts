@@ -74,7 +74,10 @@ export class RoomsService {
 		}
 	}
 
-	async verifyRoomAccess(roomId: string, email: string): Promise<boolean> {
+	async verifyRoomAccess(
+		roomId: string,
+		email: string,
+	): Promise<{ hasAccess: boolean; roomId?: string; email?: string; isOwner?: boolean }> {
 		const room = await this.prismaService.rooms.findFirst({
 			where: {
 				id: roomId,
@@ -89,10 +92,18 @@ export class RoomsService {
 		});
 
 		if (!room || room.participants.length === 0) {
-			return false;
+			return { hasAccess: false };
 		}
 
-		return true;
+		const participant = room.participants[0];
+		const isOwner = participant.role === PARTICIPANT_ROLE.HOST;
+
+		return {
+			hasAccess: true,
+			roomId: room.id,
+			email: participant.email,
+			isOwner,
+		};
 	}
 
 	private generateToken(byteLength: number, stringType: BufferEncoding): string {

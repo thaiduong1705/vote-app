@@ -6,6 +6,7 @@ import { SendInvitesDto } from "./dto/send-invites.dto";
 import { PrismaService } from "src/config/database.config";
 import { JwtService } from "@nestjs/jwt";
 import { getNameFromEmail } from "src/utils/helpers";
+import { RealtimeGateway } from "src/realtime/realtime.gateway";
 
 @Injectable()
 export class InvitationsService {
@@ -13,10 +14,9 @@ export class InvitationsService {
 		@InjectQueue(QUEUE_NAMES.EMAIL) private emailQueue: Queue,
 		private prismaService: PrismaService,
 		private jwtService: JwtService,
+		private realtimeGateway: RealtimeGateway,
 	) {}
 
-	async sendInvitationEmail() {}
-	async sendReminderEmail() {}
 	async sendInvites(dto: SendInvitesDto, ownerToken: string) {
 		// decode and verify owner token
 		const decoded = this.jwtService.verify<{ roomId: string; email: string }>(ownerToken);
@@ -103,7 +103,11 @@ export class InvitationsService {
 				roomId: invitation.roomId,
 				email: invitation.email,
 				role: "GUEST",
+				joinedAt: new Date(),
 			},
 		});
+
+		// notify
+		this.realtimeGateway.broadcastRestaurantsUpdated(invitation.roomId);
 	}
 }

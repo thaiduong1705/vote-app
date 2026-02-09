@@ -9,6 +9,7 @@ import type {
 	SubmitVoteRequest,
 	Vote,
 	RoomVotesResponse,
+	VerifyAccessResponse,
 } from "../types/api";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -53,7 +54,9 @@ export const api = {
 	},
 
 	async getRestaurants(name?: string): Promise<Restaurant[]> {
-		const res = await fetch(`${API_BASE}/restaurants${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+		const res = await fetch(`${API_BASE}/restaurants${name ? `?name=${encodeURIComponent(name)}` : ""}`, {
+			credentials: "include",
+		});
 		if (!res.ok) {
 			throw new Error(`Failed to fetch restaurants: ${res.statusText}`);
 		}
@@ -118,6 +121,16 @@ export const api = {
 		});
 		if (!res.ok) {
 			throw new Error(`Failed to add restaurant: ${res.statusText}`);
+		}
+		return res.json();
+	},
+
+	async verifyAccess(): Promise<VerifyAccessResponse> {
+		const res = await fetch(`${API_BASE}/rooms/verify-access`, {
+			credentials: "include",
+		});
+		if (!res.ok) {
+			return { hasAccess: false };
 		}
 		return res.json();
 	},

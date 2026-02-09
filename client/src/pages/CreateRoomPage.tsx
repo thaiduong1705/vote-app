@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 
@@ -35,6 +35,23 @@ function CreateRoomPage() {
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	// Check if user already has valid token and redirect to room
+	useEffect(() => {
+		const checkExistingAccess = async () => {
+			try {
+				const result = await api.verifyAccess();
+				if (result.hasAccess && result.roomId) {
+					const ownerParam = result.isOwner ? "?owner=true" : "";
+					navigate(`/room/${result.roomId}${ownerParam}`, { replace: true });
+				}
+			} catch (err) {
+				// No valid token, stay on create page
+				console.log("No existing access");
+			}
+		};
+		checkExistingAccess();
+	}, [navigate]);
 
 	// Client-side validation based on server DTO
 	const validateForm = useCallback(() => {
