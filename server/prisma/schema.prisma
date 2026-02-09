@@ -20,72 +20,69 @@ enum PARTICIPANT_ROLE {
 
 model Rooms {
   id                    String        @id @default(uuid())
-  room_name             String
-  start_at              DateTime
-  end_at                DateTime
+  roomName             String
+  startAt              DateTime
+  endAt                DateTime
   status                ROOM_STATUS   @default(ACTIVE)
-  owner_id              String        // participant id
-  winner_restaurant_id  String?
-  created_at            DateTime      @default(now())
+  ownerId             String        // participant id
+  winnerRestaurantId  String?
+  createdAt           DateTime      @default(now())
 
   participants          Participants[]
   invitations           Invitations[]
   votes                 Votes[]
-  winner                Restaurants?   @relation("WinnerRestaurant", fields: [winner_restaurant_id], references: [id])
+  winner                Restaurants?   @relation("WinnerRestaurant", fields: [winnerRestaurantId], references: [id])
 
-  @@index([status, end_at])
+  @@index([status, endAt])
 }
 
 model Participants {
   id                String             @id @default(uuid())
-  room_id           String
+  roomId           String
   email             String
   role              PARTICIPANT_ROLE   @default(GUEST)
-  joined_at         DateTime           @default(now())
+  joinedAt         DateTime           @default(now())
 
-  room              Rooms              @relation(fields: [room_id], references: [id], onDelete: Cascade)
+  room              Rooms              @relation(fields: [roomId], references: [id], onDelete: Cascade)
   votes             Votes[]
 
-  @@unique([room_id, email])
-  @@index([room_id])
+  @@unique([roomId, email])
+  @@index([roomId])
 }
 
 model Invitations {
   id          String    @id @default(uuid())
-  room_id     String
+  roomId     String
   email       String
-  expires_at  DateTime
-  used_at     DateTime?
-  created_at  DateTime  @default(now())
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+  room        Rooms     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
-  room        Rooms     @relation(fields: [room_id], references: [id], onDelete: Cascade)
-
-  @@unique([room_id, email])
-  @@index([room_id, email])
+  @@unique([roomId, email])
+  @@index([roomId, email])
 }
 
 model Restaurants {
   id              String   @id @default(uuid())
   name            String   @unique
-  menu_image_url  String?
-  created_at      DateTime @default(now())
+  createdAt      DateTime @default(now())
 
   votes           Votes[]
-  winner_rooms    Rooms[]  @relation("WinnerRestaurant")
+  winnerRooms    Rooms[]  @relation("WinnerRestaurant")
 }
 
 model Votes {
   id                 String       @id @default(uuid())
-  room_id            String
-  participant_id     String
-  participant_email  String
-  restaurant_id      String
-  voted_at           DateTime     @default(now())
+  roomId            String
+  participantId     String
+  participantEmail  String
+  restaurantId      String
+  votedAt           DateTime     @default(now())
+  room               Rooms        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  participant        Participants @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  restaurant         Restaurants  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  room               Rooms        @relation(fields: [room_id], references: [id], onDelete: Cascade)
-  participant        Participants @relation(fields: [participant_id], references: [id], onDelete: Cascade)
-  restaurant         Restaurants  @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
-
-  @@unique([room_id, participant_id])
-  @@index([room_id])
+  @@unique([roomId, participantId])
+  @@index([roomId])
 }

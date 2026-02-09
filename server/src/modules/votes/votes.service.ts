@@ -28,8 +28,8 @@ export class VotesService {
 
 		const participant = await this.prismaService.participants.findUnique({
 			where: {
-				room_id_email: {
-					room_id: dto.roomId,
+				roomId_email: {
+					roomId: dto.roomId,
 					email: participantEmail,
 				},
 			},
@@ -41,33 +41,34 @@ export class VotesService {
 
 		const vote = await this.prismaService.votes.upsert({
 			where: {
-				room_id_participant_id: {
-					room_id: dto.roomId,
-					participant_id: participant.id,
+				roomId_participantId: {
+					roomId: dto.roomId,
+					participantId: participant.id,
 				},
 			},
 			update: {
-				restaurant_id: dto.restaurantId,
-				voted_at: new Date(),
+				restaurantId: dto.restaurantId,
+				votedAt: new Date(),
 			},
 			create: {
-				room_id: dto.roomId,
-				participant_id: participant.id,
-				participant_email: participant.email,
-				restaurant_id: dto.restaurantId,
-				voted_at: new Date(),
+				roomId: dto.roomId,
+				participantId: participant.id,
+				participantEmail: participant.email,
+				restaurantId: dto.restaurantId,
+				votedAt: new Date(),
 			},
-			include: {
-				restaurant: true,
-				participant: true,
-			},
+		});
+
+		// Get the restaurant name for broadcast
+		const restaurant = await this.prismaService.restaurants.findUnique({
+			where: { id: vote.restaurantId },
 		});
 
 		this.realtimeGateway.broadcastVoteUpdate(dto.roomId, {
 			voteId: vote.id,
-			participantEmail: vote.participant.email,
-			restaurantName: vote.restaurant.name,
-			votedAt: vote.voted_at,
+			participantEmail: vote.participantEmail,
+			restaurantName: restaurant?.name || "Unknown",
+			votedAt: vote.votedAt,
 		});
 
 		return vote;
@@ -75,7 +76,7 @@ export class VotesService {
 
 	async getRoomVotes(roomId: string, token?: string) {
 		const votes = await this.prismaService.votes.findMany({
-			where: { room_id: roomId },
+			where: { roomId: roomId },
 			include: {
 				restaurant: true,
 				participant: {
@@ -89,11 +90,11 @@ export class VotesService {
 
 		const restaurants = await this.prismaService.restaurants.findMany();
 		const participants = await this.prismaService.participants.findMany({
-			where: { room_id: roomId },
+			where: { roomId: roomId },
 			select: {
 				id: true,
 				email: true,
-				joined_at: true,
+				joinedAt: true,
 				role: true,
 			},
 		});
@@ -122,7 +123,7 @@ export class VotesService {
 			participants: participants.map((p) => ({
 				id: p.id,
 				name: p.email.split("@")[0],
-				createdAt: p.joined_at,
+				createdAt: p.joinedAt,
 			})),
 			currentUserRole,
 		};

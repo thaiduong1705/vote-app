@@ -41,7 +41,7 @@ export const api = {
 	},
 
 	async joinRoom(data: JoinRoomRequest): Promise<JoinRoomResponse> {
-		const res = await fetch(`${API_BASE}/invitations/join`, {
+		const res = await fetch(`${API_BASE}/invitations/join-room`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),

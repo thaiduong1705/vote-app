@@ -35,12 +35,12 @@ export class InvitationsService {
 			throw new NotFoundException("Room not found");
 		}
 
-		const expireAt = room.end_at;
+		const expireAt = room.endAt;
 		const invitations = dto.emails.map((email) => {
 			return {
-				room_id: room.id,
+				roomId: room.id,
 				email,
-				expires_at: expireAt,
+				expiresAt: expireAt,
 			};
 		});
 
@@ -54,7 +54,7 @@ export class InvitationsService {
 		invitations.forEach(async (invitation) => {
 			await this.emailQueue.add(JOB_NAMES.SEND_INVITE, {
 				to: invitation.email,
-				roomName: room.room_name,
+				roomName: room.roomName,
 				ownerName: getNameFromEmail(owner.email),
 				inviteToken: this.jwtService.sign(
 					{
@@ -63,7 +63,7 @@ export class InvitationsService {
 					},
 					{ expiresIn: Math.floor((expireAt.getTime() - Date.now()) / 1000) },
 				),
-				endAt: room.end_at,
+				endAt: room.endAt,
 			});
 		});
 
@@ -74,8 +74,8 @@ export class InvitationsService {
 		const decoded = this.jwtService.verify<{ roomId: string; email: string }>(token);
 		const invitation = await this.prismaService.invitations.findUnique({
 			where: {
-				room_id_email: {
-					room_id: decoded.roomId,
+				roomId_email: {
+					roomId: decoded.roomId,
 					email: decoded.email,
 				},
 			},
@@ -84,23 +84,23 @@ export class InvitationsService {
 		if (!invitation) {
 			throw new NotFoundException("Invalid or expired invitation token");
 		}
-		if (invitation.expires_at < new Date()) {
+		if (invitation.expiresAt < new Date()) {
 			throw new BadRequestException("Invitation token has expired");
 		}
-		if (invitation.used_at) {
+		if (invitation.usedAt) {
 			throw new BadRequestException("Invitation token has already been used");
 		}
 
 		// Mark invitation as used
 		await this.prismaService.invitations.update({
 			where: { id: invitation.id },
-			data: { used_at: new Date() },
+			data: { usedAt: new Date() },
 		});
 
 		// update participant list of that room
 		await this.prismaService.participants.create({
 			data: {
-				room_id: invitation.room_id,
+				roomId: invitation.roomId,
 				email: invitation.email,
 				role: "GUEST",
 			},

@@ -18,15 +18,15 @@ export class RoomsService {
 		const ownerId = this.generateToken(16, "hex");
 		const room = await this.prismaService.rooms.create({
 			data: {
-				room_name: dto.roomName,
-				owner_id: ownerId,
-				start_at: dto.startAt,
-				end_at: dto.endAt,
+				roomName: dto.roomName,
+				ownerId: ownerId,
+				startAt: dto.startAt,
+				endAt: dto.endAt,
 				participants: {
 					create: {
 						id: ownerId,
 						email: dto.ownerEmail,
-						joined_at: new Date(),
+						joinedAt: new Date(),
 						role: PARTICIPANT_ROLE.HOST,
 					},
 				},
@@ -58,7 +58,7 @@ export class RoomsService {
 			// Check if participant is HOST in this room
 			const participant = await this.prismaService.participants.findFirst({
 				where: {
-					room_id: roomId,
+					roomId: roomId,
 					email: decoded.participantEmail,
 					role: PARTICIPANT_ROLE.HOST,
 				},
@@ -75,7 +75,7 @@ export class RoomsService {
 	}
 
 	async verifyRoomAccess(roomId: string, email: string): Promise<boolean> {
-		const participant = await this.prismaService.rooms.findFirst({
+		const room = await this.prismaService.rooms.findFirst({
 			where: {
 				id: roomId,
 			},
@@ -88,7 +88,7 @@ export class RoomsService {
 			},
 		});
 
-		if (!participant) {
+		if (!room || room.participants.length === 0) {
 			return false;
 		}
 

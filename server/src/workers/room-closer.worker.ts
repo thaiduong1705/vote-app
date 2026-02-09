@@ -24,7 +24,7 @@ export class RoomCloserWorker extends WorkerHost {
 		const expiredRooms = await this.prisma.rooms.findMany({
 			where: {
 				status: ROOM_STATUS.ACTIVE,
-				end_at: {
+				endAt: {
 					lt: now,
 				},
 			},
@@ -40,7 +40,7 @@ export class RoomCloserWorker extends WorkerHost {
 		for (const room of expiredRooms) {
 			const voteCounts = room.votes.reduce(
 				(acc, vote) => {
-					const restaurantId = vote.restaurant_id;
+					const restaurantId = vote.restaurantId;
 					if (acc[restaurantId]) {
 						acc[restaurantId] += 1;
 					} else {
@@ -63,7 +63,7 @@ export class RoomCloserWorker extends WorkerHost {
 				where: { id: room.id },
 				data: {
 					status: ROOM_STATUS.CLOSED,
-					winner_restaurant_id: winningRestaurantId || null,
+					winnerRestaurantId: winningRestaurantId || null,
 				},
 			});
 		}

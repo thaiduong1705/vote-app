@@ -99,7 +99,7 @@ export class EmailWorker extends WorkerHost {
 			// Fetch users in that room who have not voted yet
 			const users = await this.prismaService.participants.findMany({
 				where: {
-					room_id: roomId,
+					roomId: roomId,
 					votes: {
 						none: {},
 					},
@@ -108,8 +108,8 @@ export class EmailWorker extends WorkerHost {
 					email: true,
 					room: {
 						select: {
-							room_name: true,
-							end_at: true,
+							roomName: true,
+							endAt: true,
 						},
 					},
 				},
@@ -121,9 +121,9 @@ export class EmailWorker extends WorkerHost {
 			for (const user of users) {
 				const template = emailTemplates.reminder({
 					roomLink,
-					roomName: user.room.room_name,
+					roomName: user.room.roomName,
 					participantName: user.email,
-					endAt: new Date(user.room.end_at).toDateString(),
+					endAt: new Date(user.room.endAt).toDateString(),
 				});
 
 				try {
