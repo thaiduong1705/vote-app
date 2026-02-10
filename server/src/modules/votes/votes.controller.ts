@@ -9,8 +9,8 @@ export class VotesController {
 	constructor(private readonly votesService: VotesService) {}
 
 	@Post()
-	async submitVote(@Body() dto: SubmitVoteDto, @CurrentUser("participantEmail") participantEmail: string) {
-		return this.votesService.submitVote(dto, participantEmail);
+	async submitVote(@Body() dto: SubmitVoteDto, @CurrentUser("email") email: string) {
+		return this.votesService.submitVote(dto, email);
 	}
 
 	@Get("room/:roomId")

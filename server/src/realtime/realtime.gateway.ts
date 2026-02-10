@@ -18,10 +18,10 @@ import { Server, Socket } from "socket.io";
 	namespace: "/ws",
 })
 export class RealtimeGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect {
-	private server: Server;
+	@WebSocketServer()
+	server!: Server;
 
 	afterInit(server: Server) {
-		this.server = server;
 		console.log("WebSocket server initialized");
 	}
 
@@ -46,15 +46,15 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayInit, OnGa
 	}
 
 	broadcastVoteUpdate(roomId: string, voteData: any) {
-		this.server.to(`room:${roomId}`).emit("vote-updated", voteData);
+		this.server.to(roomId).emit("vote-updated", voteData);
 	}
 
 	broadcastRoomClosed(roomId: string, data: any) {
-		this.server.to(`room:${roomId}`).emit("room-closed", data);
+		this.server.to(roomId).emit("room-closed", data);
 	}
 
 	broadcastRestaurantsUpdated(roomId: string) {
-		this.server.to(`room:${roomId}`).emit("restaurants-updated", {
+		this.server.to(roomId).emit("restaurants-updated", {
 			timestamp: new Date().toISOString(),
 		});
 	}

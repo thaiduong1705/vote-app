@@ -71,7 +71,8 @@ export class InvitationsService {
 	}
 
 	async joinRoom(token: string) {
-		const decoded = this.jwtService.verify<{ roomId: string; email: string }>(token);
+		console.log(token);
+		const decoded = this.jwtService.verify<{ roomId: string; email: string }>(token.trim());
 		const invitation = await this.prismaService.invitations.findUnique({
 			where: {
 				roomId_email: {
@@ -107,7 +108,28 @@ export class InvitationsService {
 			},
 		});
 
+		// get the endAt of the room to set token expiry
+		const room = await this.prismaService.rooms.findUnique({
+			where: { id: invitation.roomId },
+		});
+
+		if (!room) {
+			throw new NotFoundException("Room not found");
+		}
+
 		// notify
 		this.realtimeGateway.broadcastRestaurantsUpdated(invitation.roomId);
+
+		const accessToken = this.jwtService.sign(
+			{
+				roomId: invitation.roomId,
+				email: invitation.email,
+			},
+			{
+				expiresIn: Math.floor((room.endAt.getTime() - Date.now()) / 1000),
+			},
+		);
+
+		return { roomId: invitation.roomId, token: accessToken };
 	}
 }

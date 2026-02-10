@@ -46,6 +46,7 @@ export const api = {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
+			credentials: "include",
 		});
 		if (!res.ok) {
 			throw new Error(`Failed to join room: ${res.statusText}`);

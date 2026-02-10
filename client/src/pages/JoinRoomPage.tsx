@@ -9,6 +9,7 @@ function JoinRoomPage() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [joined, setJoined] = useState(false);
+	const [roomId, setRoomId] = useState<string>("");
 
 	// Check if user already has valid token and redirect to room
 	useEffect(() => {
@@ -37,8 +38,8 @@ function JoinRoomPage() {
 		setError("");
 
 		try {
-			const result = await api.joinRoom({ token });
-			localStorage.setItem("participantId", result.participant.id);
+			const { roomId } = await api.joinRoom({ token });
+			setRoomId(roomId);
 			setJoined(true);
 			setCountdown(3);
 		} catch (err: unknown) {
@@ -60,13 +61,11 @@ function JoinRoomPage() {
 
 	useEffect(() => {
 		if (joined && countdown === 0) {
-			const roomId = new URLSearchParams(window.location.search).get("roomId") || "voting-room";
 			navigate(`/room/${roomId}`);
 		}
-	}, [joined, countdown, navigate]);
+	}, [joined, countdown, navigate, roomId]);
 
 	const handleNavigateNow = () => {
-		const roomId = new URLSearchParams(window.location.search).get("roomId") || "voting-room";
 		navigate(`/room/${roomId}`);
 	};
 

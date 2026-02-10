@@ -52,8 +52,8 @@ export interface Participant {
 }
 
 export interface JoinRoomResponse {
-	participant: Participant;
-	room: Room;
+	roomId: string;
+	token: string;
 }
 
 export interface Restaurant {

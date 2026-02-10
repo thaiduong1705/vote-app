@@ -34,7 +34,7 @@ export class RoomsService {
 		});
 
 		const token = this.jwtService.sign(
-			{ participantEmail: dto.ownerEmail, roomId: room.id },
+			{ roomId: room.id, email: dto.ownerEmail },
 			{ expiresIn: new Date(dto.endAt).getTime() - Date.now() },
 		);
 
@@ -48,7 +48,7 @@ export class RoomsService {
 		}
 
 		try {
-			const decoded = this.jwtService.verify<{ participantEmail: string; roomId: string }>(token);
+			const decoded = this.jwtService.verify<{ roomId: string; email: string }>(token);
 
 			// Verify roomId matches
 			if (decoded.roomId !== roomId) {
@@ -59,7 +59,7 @@ export class RoomsService {
 			const participant = await this.prismaService.participants.findFirst({
 				where: {
 					roomId: roomId,
-					email: decoded.participantEmail,
+					email: decoded.email,
 					role: PARTICIPANT_ROLE.HOST,
 				},
 			});

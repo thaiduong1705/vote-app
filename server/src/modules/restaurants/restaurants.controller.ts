@@ -40,7 +40,7 @@ export class RestaurantsController {
 		try {
 			// Verify token and extract email
 			const decoded = this.jwtService.verify(token);
-			const { participantEmail, roomId: tokenRoomId } = decoded;
+			const { email, roomId: tokenRoomId } = decoded;
 
 			if (tokenRoomId !== dto.roomId) {
 				throw new BadRequestException("Token room ID does not match request");
@@ -54,7 +54,7 @@ export class RestaurantsController {
 				include: {
 					participants: {
 						where: {
-							email: participantEmail,
+							email,
 						},
 					},
 				},

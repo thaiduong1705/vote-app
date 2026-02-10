@@ -35,20 +35,20 @@ export default function RoomPage() {
 	const { socket, isConnected } = useSocket(roomId || null);
 
 	useEffect(() => {
-		loadData();
+		loadRoomData();
 	}, [roomId]);
 
 	useEffect(() => {
 		if (!socket) return;
 
-		socket.on("vote-updated", (data) => {
-			console.log("Vote updated:", data);
-			loadVotes();
+		socket.on("vote-updated", () => {
+			console.log("Vote updated - reloading room data");
+			loadRoomData();
 		});
 
-		socket.on("restaurants-updated", (data) => {
-			console.log("Restaurants updated:", data);
-			loadData();
+		socket.on("restaurants-updated", () => {
+			console.log("Restaurants updated - reloading room data");
+			loadRoomData();
 		});
 
 		socket.on("room-closed", (data) => {
@@ -63,14 +63,15 @@ export default function RoomPage() {
 		};
 	}, [socket]);
 
-	const loadData = async () => {
+	const loadRoomData = async () => {
 		try {
-			const [restaurantsData, votesResponse] = await Promise.all([api.getRestaurants(), api.getRoomVotes(roomId!)]);
+			const votesResponse = await api.getRoomVotes(roomId!);
 
-			setRestaurants(restaurantsData);
+			// Set all data from single API response
+			setRestaurants(votesResponse.restaurants);
 			setParticipants(votesResponse.participants || []);
 
-			// Check if user is owner from API response first
+			// Check if user is owner from API response
 			if (votesResponse.currentUserRole === "HOST") {
 				setIsOwner(true);
 			} else if (searchParams.get("owner") === "true") {
@@ -101,26 +102,7 @@ export default function RoomPage() {
 				setHasVoted(true);
 			}
 		} catch (err) {
-			console.error("Failed to load data:", err);
-		}
-	};
-
-	const loadVotes = async () => {
-		try {
-			const votesResponse = await api.getRoomVotes(roomId!);
-			setParticipants(votesResponse.participants || []);
-
-			// Map votes with restaurant data
-			const votesWithRestaurants = votesResponse.votes.map((vote) => {
-				const restaurant = votesResponse.restaurants.find((r) => r.id === vote.restaurantId);
-				return {
-					...vote,
-					restaurant: restaurant || { id: vote.restaurantId, name: "Unknown", menuImageUrl: null, createdAt: "" },
-				};
-			});
-			setVotes(votesWithRestaurants);
-		} catch (err) {
-			console.error("Failed to load votes:", err);
+			console.error("Failed to load room data:", err);
 		}
 	};
 
@@ -208,7 +190,7 @@ export default function RoomPage() {
 				participantId,
 				restaurantId: selectedRestaurant,
 			});
-			await loadVotes();
+			await loadRoomData();
 			setHasVoted(true);
 			setSelectedRestaurant("");
 		} catch (err) {

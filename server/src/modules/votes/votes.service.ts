@@ -13,7 +13,7 @@ export class VotesService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async submitVote(dto: SubmitVoteDto, participantEmail: string) {
+	async submitVote(dto: SubmitVoteDto, email: string) {
 		const room = await this.prismaService.rooms.findUnique({
 			where: { id: dto.roomId },
 		});
@@ -30,7 +30,7 @@ export class VotesService {
 			where: {
 				roomId_email: {
 					roomId: dto.roomId,
-					email: participantEmail,
+					email,
 				},
 			},
 		});
@@ -104,10 +104,10 @@ export class VotesService {
 		// Determine current user's role if token provided
 		if (token) {
 			try {
-				const decoded = this.jwtService.verify<{ participantEmail: string; roomId: string }>(token);
+				const decoded = this.jwtService.verify<{ roomId: string; email: string }>(token);
 
 				if (decoded && decoded.roomId === roomId) {
-					const participant = participants.find((p) => p.email === decoded.participantEmail);
+					const participant = participants.find((p) => p.email === decoded.email);
 					if (participant) {
 						currentUserRole = participant.role;
 					}
