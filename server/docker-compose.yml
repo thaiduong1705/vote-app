@@ -42,6 +42,29 @@ services:
       - valkey
     volumes:
       - redisinsight:/data
+  backend:
+    container_name: vote-app-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - valkey
+    env_file:
+      - .env.production
+    ports:
+      - "3000"
+  frontend:
+    container_name: vote-app-frontend
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    env_file:
+      - ../client/.env.production
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   postgres-data:
@@ -49,4 +72,5 @@ volumes:
   redisinsight:
 networks:
   default:
+    name: vote-app-network
     driver: bridge

@@ -50,6 +50,7 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayInit, OnGa
 	}
 
 	broadcastRoomClosed(roomId: string, data: any) {
+		console.log(`Broadcasting room closed for room ${roomId}`);
 		this.server.to(roomId).emit("room-closed", data);
 	}
 

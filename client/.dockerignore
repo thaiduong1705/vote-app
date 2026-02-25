@@ -1,0 +1,40 @@
+# Dependencies (installed separately)
+node_modules
+npm-debug.log
+
+# Build output (created in Dockerfile)
+dist
+
+# Git and GitHub files
+.git
+.github
+.gitignore
+
+# Editor and IDE files
+.vscode
+.idea
+.agents
+.opencode
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+*.md
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage
+
+# Misc
+.DS_Store
+Thumbs.db

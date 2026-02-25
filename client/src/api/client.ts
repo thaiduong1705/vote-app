@@ -12,7 +12,7 @@ import type {
 	VerifyAccessResponse,
 } from "../types/api";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 export const api = {
 	async createRoom(data: CreateRoomRequest): Promise<CreateRoomResponse> {
@@ -20,7 +20,6 @@ export const api = {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
-			credentials: "include",
 		});
 		if (!res.ok) {
 			throw new Error(`Failed to create room: ${res.statusText}`);

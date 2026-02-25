@@ -85,6 +85,18 @@ export class VotesService {
 						email: true,
 					},
 				},
+				room: {
+					select: {
+						id: true,
+						status: true,
+						endAt: true,
+						winner: {
+							select: {
+								name: true,
+							},
+						},
+					},
+				},
 			},
 		});
 
@@ -126,6 +138,8 @@ export class VotesService {
 				createdAt: p.joinedAt,
 			})),
 			currentUserRole,
+			statusRoom: votes[0]?.room.status,
+			winnerName: votes[0]?.room.winner?.name || null,
 		};
 	}
 }

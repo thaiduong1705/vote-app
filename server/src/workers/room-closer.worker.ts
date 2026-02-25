@@ -3,11 +3,15 @@ import { ConfigService } from "@nestjs/config";
 import { Job } from "bullmq";
 import { ROOM_STATUS } from "prisma/generated/enums";
 import { PrismaService } from "src/config/database.config";
+import { RealtimeGateway } from "src/realtime/realtime.gateway";
 import { JOB_NAMES, QUEUE_NAMES } from "src/utils/constant";
 
 @Processor(QUEUE_NAMES.ROOM_CLOSER)
 export class RoomCloserWorker extends WorkerHost {
-	constructor(private prisma: PrismaService) {
+	constructor(
+		private prisma: PrismaService,
+		private realtimeGateway: RealtimeGateway,
+	) {
 		super();
 	}
 	async process(job: Job): Promise<any> {
@@ -19,6 +23,7 @@ export class RoomCloserWorker extends WorkerHost {
 	}
 
 	private async checkExpriredRooms() {
+		console.log("Checking for expired rooms...");
 		const now = new Date();
 
 		const expiredRooms = await this.prisma.rooms.findMany({
@@ -65,6 +70,12 @@ export class RoomCloserWorker extends WorkerHost {
 					status: ROOM_STATUS.CLOSED,
 					winnerRestaurantId: winningRestaurantId || null,
 				},
+			});
+
+			const winningRestaurant = room.votes.find((vote) => vote.restaurantId === winningRestaurantId)?.restaurant;
+
+			this.realtimeGateway.broadcastRoomClosed(room.id, {
+				winnerName: winningRestaurant?.name || null,
 			});
 		}
 	}

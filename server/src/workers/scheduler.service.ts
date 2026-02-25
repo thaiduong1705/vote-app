@@ -19,7 +19,7 @@ export class SchedulerService implements OnModuleInit {
 		const reminderTime = new Date(endAt.getTime() - 15 * 60 * 1000); // 15 minutes before endAt
 
 		if (reminderTime > new Date()) {
-			await this.emailQueue.add(JOB_NAMES.SEND_REMINDER, { roomId }, { delay: reminderTime.getTime() - Date.now() });
+			await this.emailQueue.add(JOB_NAMES.SEND_REMINDER, { roomId });
 			console.log(`Scheduled reminder for room ${roomId} at ${reminderTime.toISOString()}`);
 		}
 	}

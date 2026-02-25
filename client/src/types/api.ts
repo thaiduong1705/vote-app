@@ -76,6 +76,8 @@ export interface RoomVotesResponse {
 	restaurants: Restaurant[];
 	participants: Participant[];
 	currentUserRole?: string | null;
+	statusRoom?: string;
+	winnerName?: string;
 }
 
 export interface VerifyAccessResponse {

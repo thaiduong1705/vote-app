@@ -1,0 +1,45 @@
+# Dependencies (installed separately)
+node_modules
+npm-debug.log
+
+# Build output (created in Dockerfile)
+dist
+
+# Git and GitHub files
+.git
+.github
+.gitignore
+
+# Editor and IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+*.md
+plan.md
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/__test__/
+**/__tests__/
+coverage
+test-ws.html
+
+# Docker files (avoid recursion)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Misc
+.DS_Store
+Thumbs.db

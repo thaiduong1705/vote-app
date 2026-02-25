@@ -91,7 +91,7 @@ export class RoomsService {
 			},
 		});
 
-		if (!room || room.participants.length === 0) {
+		if (!room || room.participants.length === 0 || room.status !== "ACTIVE") {
 			return { hasAccess: false };
 		}
 

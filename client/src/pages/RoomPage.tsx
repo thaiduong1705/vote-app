@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
 import { useSocket } from "../hooks/useSocket";
 import type { Restaurant, Vote, Participant } from "../types/api";
@@ -11,6 +11,7 @@ interface VoteWithRestaurant extends Vote {
 export default function RoomPage() {
 	const { roomId } = useParams<{ roomId: string }>();
 	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 
 	const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 	const [votes, setVotes] = useState<VoteWithRestaurant[]>([]);
@@ -54,6 +55,7 @@ export default function RoomPage() {
 		socket.on("room-closed", (data) => {
 			console.log("Room closed:", data);
 			alert(`Room closed! Winner: ${data.winnerName || "No votes yet"}`);
+			navigate("/");
 		});
 
 		return () => {
@@ -66,6 +68,11 @@ export default function RoomPage() {
 	const loadRoomData = async () => {
 		try {
 			const votesResponse = await api.getRoomVotes(roomId!);
+
+			if (votesResponse.statusRoom === "CLOSED") {
+				alert(`Room đã đóng! Món thắng cuộc: ${votesResponse.winnerName || "Chưa có phiếu nào"}`);
+				navigate("/");
+			}
 
 			// Set all data from single API response
 			setRestaurants(votesResponse.restaurants);

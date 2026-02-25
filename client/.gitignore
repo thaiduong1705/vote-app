@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 
 .env
+.env.development
+.env.test
+.env.production
 .agents
 .github
 .opencode
